@@ -11,9 +11,12 @@ public class PlayerController : MonoBehaviour {
 
     Vector2 velocity;
 
+    private Trace _trace;
+
     private void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
+        _trace = GetComponent<Trace>();
     }
 
     void LateUpdate () {
@@ -24,5 +27,7 @@ public class PlayerController : MonoBehaviour {
         velocity = move * Speed * Time.deltaTime;
         rb.AddForce(move * Speed * Time.deltaTime);
         rb.velocity += velocity;
+
+        _trace.addPoint(transform.position);
 	}
 }
