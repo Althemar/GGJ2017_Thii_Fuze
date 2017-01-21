@@ -9,6 +9,7 @@ public class Bomb : MonoBehaviour {
     public static event BombEvent OnPlayerInitiateBomb;
     public static event BombEvent OnBombExplosion;
 
+
     bool bombInitiated = false;
 
     private void Awake()

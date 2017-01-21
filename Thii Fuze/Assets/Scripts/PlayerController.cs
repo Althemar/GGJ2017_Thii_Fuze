@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 
     public GameObject arrowJ1;
     public GameObject arrowJ2;
+    public float discordAngle;
 
     public float arrowDistance = 1f;
 
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour
         Vector2 moveJ2;
         moveJ1 = new Vector2(Input.GetAxis("HorizontalJ1"), Input.GetAxis("VerticalJ1"));
         moveJ2 = new Vector2(Input.GetAxis("HorizontalJ2"), Input.GetAxis("VerticalJ2"));
+        discordAngle = Vector2.Angle(moveJ1, moveJ2);
         arrowJ1.transform.localPosition = moveJ1 * arrowDistance;
         arrowJ2.transform.localPosition = moveJ2 * arrowDistance;
         Vector2 move = moveJ1 + moveJ2;
