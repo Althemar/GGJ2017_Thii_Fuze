@@ -31,4 +31,10 @@ public class Travolator : MonoBehaviour {
         rb.velocity += velocity;
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
+        rb.velocity -= velocity;
+    }
+
 }
