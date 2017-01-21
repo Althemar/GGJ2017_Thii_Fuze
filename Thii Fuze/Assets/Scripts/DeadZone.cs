@@ -14,7 +14,6 @@ public class DeadZone : MonoBehaviour {
         {
             if(OnPlayerEnterDeadZone != null)
             {
-                Debug.Log("OnPlayerEnterDeadZone");
                 OnPlayerEnterDeadZone();
             }
         }

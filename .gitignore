@@ -32,3 +32,7 @@ sysinfo.txt
 *.unitypackage
 Thii Fuze/Library/
 Thii Fuze/Temp/
+Thii Fuze/Build/ThiFuse_Data/Managed/UnityEngine.dll.mdb
+*.assets
+Thii Fuze/Build/ThiFuse_Data/Mono/etc/mono/2.0/Browsers/Compat.browser
+Thii Fuze/Build/
