@@ -49,8 +49,8 @@ public class Graph
     public void deleteTransition(Edge edge)
     {
         _edges.Remove(edge);
-        Node node1 = edge.getNode1();
-        Node node2 = edge.getNode2();
+        Node node1 = edge.getNodeFirst();
+        Node node2 = edge.getNodeLast();
 
         node1.removeNeighbour(node2);
         node2.removeNeighbour(node1);
@@ -89,6 +89,11 @@ public class Graph
                 nodeString += neighbour.getId() + ", ";
             }
             nodeString += "\n";
+        }
+
+        foreach (Edge edge in _edges)
+        {
+            nodeString += edge.getId() + " " + edge.getNodeFirst().getId() + "-" + edge.getNodeLast().getId() + "\n";
         }
         return nodeString;
     }
