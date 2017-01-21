@@ -2,14 +2,16 @@
 {
 
     private int _id;
-    private Node _node1;
-    private Node _node2;
+
+    private Node _nodeFirst;
+    private Node _nodeLast;
 
     public Edge(Node node1, Node node2, int id)
     {
         _id = id;
-        _node1 = node1;
-        _node2 = node2;
+
+        _nodeFirst = node1;
+        _nodeLast = node2;
     }
 
     /*
@@ -21,13 +23,13 @@
         return _id;
     }
 
-    public Node getNode1()
+    public Node getNodeFirst()
     {
-        return _node1;
+        return _nodeFirst;
     }
 
-    public Node getNode2()
+    public Node getNodeLast()
     {
-        return _node2;
+        return _nodeLast;
     }
 }

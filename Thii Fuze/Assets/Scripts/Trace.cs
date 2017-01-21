@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Trace : MonoBehaviour
@@ -26,9 +27,10 @@ public class Trace : MonoBehaviour
     private float _distanceToMoveFirst;
     private float _distanceToMoveLast;
 
-
     private bool _deleteFirst;
     private bool _deleteLast;
+
+    private IEnumerator _coroutine;
 
     private void Awake()
     {
@@ -37,7 +39,7 @@ public class Trace : MonoBehaviour
         _points = new List<Vector3>();
         _lineRenderer = GetComponent<LineRenderer>();
         _minDistanceBetweenPoints = 0.05f;
-        _deleteRate = 0.5f;
+        _deleteRate = 0.1f;
         _traceState = TraceState.drawing;
     }
 
@@ -54,7 +56,7 @@ public class Trace : MonoBehaviour
                 if (_deleteLast && _points.Count > 1)
                 {
                     Vector3 newPosPoint = Vector3.MoveTowards(_points[_points.Count - 1], _points[_points.Count - 2], _distanceToMoveLast);
-                    _points[0] = newPosPoint;
+                    _points[_points.Count - 1] = newPosPoint;
                 }
                 break;
             case TraceState.drawing:
@@ -113,16 +115,19 @@ public class Trace : MonoBehaviour
                     _points.Add(lastsPos);
                     distanceFromLast = Vector3.Distance(currentPos, lastsPos);
                 }
-                //if (distanceFromLast >= _minDistanceBetweenPoints)
-                //    _points.Add(newPos);
             }
         }
     }
 
     public void activateDeleting()
     {
-        _traceState = TraceState.deleting;
-        InvokeRepeating("burn", 0f, _deleteRate);
+        if (_traceState != TraceState.deleting)
+        {
+            _traceState = TraceState.deleting;
+            _coroutine = burn(_deleteRate);
+            StartCoroutine(_coroutine);
+        }
+       
     }
 
     public void burnFirst(bool burn)
@@ -135,29 +140,46 @@ public class Trace : MonoBehaviour
         _deleteLast = burn;
     }
 
-    private void burn()
+
+    private IEnumerator burn(float waitTime)
     {
-        if (_points.Count > 0 && _deleteFirst)
-            _distanceToMoveFirst = removePoint(0, 1);
-
-        if (_points.Count > 0 && _deleteLast)
-            _distanceToMoveLast = removePoint(_points.Count - 1, _points.Count - 2);
-
-        if (_points.Count == 0)
+        while (true)
         {
-            CancelInvoke();
-            Destroy(gameObject);
-        }       
+            yield return new WaitForSeconds(waitTime);
+
+            if (_points.Count > 0 && _deleteFirst)
+            {
+                _points.RemoveAt(0);
+                if (_points.Count > 1)
+                {
+                    float distanceToNextPoint = Vector3.Distance(_points[0], _points[1]);
+                    _distanceToMoveFirst = distanceToNextPoint / (_deleteRate * 60);
+                }
+            }
+            if (_points.Count > 0 && _deleteLast)
+            {
+                _points.RemoveAt(_points.Count - 1);
+                if (_points.Count > 1)
+                {
+                    float distanceToNextPoint = Vector3.Distance(_points[_points.Count - 1], _points[_points.Count - 2]);
+                    _distanceToMoveLast = distanceToNextPoint / (_deleteRate * 60);
+                }
+            }
+
+            if (_points.Count == 0)
+            {
+                if (_deleteFirst && !_deleteLast)
+                    transform.parent.gameObject.GetComponent<TracesHandler>().burnFollowing(_idTrace, true);
+                else if (_deleteLast && !_deleteFirst)
+                    transform.parent.gameObject.GetComponent<TracesHandler>().burnFollowing(_idTrace, false);
+                Destroy(gameObject);
+            }
+        }      
     }
 
     private float removePoint(int removeIndex, int neighbourIndex)
     {
-        _points.RemoveAt(removeIndex);
-        if (_points.Count > 1)
-        {
-            float distanceToNextPoint = Vector3.Distance(_points[removeIndex], _points[neighbourIndex]);
-            return _distanceToMoveFirst = distanceToNextPoint / (_deleteRate * 60);
-        }
+        
         return 0;
     }
 }
