@@ -9,6 +9,7 @@ public class Bomb : MonoBehaviour {
     public static event BombEvent OnPlayerInitiateBomb;
     public static event BombEvent OnBombExplosion;
 
+
     bool bombInitiated = false;
 
     private void Awake()
@@ -20,7 +21,7 @@ public class Bomb : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Player") && !bombInitiated)
         {
-            Debug.Log("OnPlayerInitiateBomb");
+            collision.gameObject.GetComponent<PlayerController>().setPlayerState(PlayerController.PlayerState.toStart);
             OnPlayerInitiateBomb();
         }
     }

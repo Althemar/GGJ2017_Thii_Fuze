@@ -7,6 +7,7 @@ public class Node
 
     private int _id;
     private List<Node> _neighbours;
+    private GameObject _crossSign;
 
     public Node(int id)
     {
@@ -28,6 +29,11 @@ public class Node
         return _neighbours;
     }
 
+    public void setCrossSign(GameObject crossSign)
+    {
+        _crossSign = crossSign;
+    }
+
     /*
      * Methods
      */
@@ -40,5 +46,10 @@ public class Node
     public void removeNeighbour(Node node)
     {
         _neighbours.Remove(node);
+    }
+
+    public void release()
+    {
+        GameObject.Destroy(_crossSign);
     }
 }
