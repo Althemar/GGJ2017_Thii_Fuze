@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
 public class Bomb : MonoBehaviour {
@@ -21,7 +19,7 @@ public class Bomb : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Player") && !bombInitiated)
         {
-            collision.gameObject.GetComponent<PlayerController>().setPlayerState(PlayerController.PlayerState.toStart);
+            //collision.gameObject.GetComponent<PlayerController>().setPlayerState(PlayerController.PlayerState.toStart);
             OnPlayerInitiateBomb();
         }
     }
