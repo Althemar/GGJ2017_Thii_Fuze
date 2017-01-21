@@ -36,7 +36,7 @@ public class Trace : MonoBehaviour
         ID_TRACE++;
         _points = new List<Vector3>();
         _lineRenderer = GetComponent<LineRenderer>();
-        _minDistanceBetweenPoints = 0.02f;
+        _minDistanceBetweenPoints = 0.05f;
         _deleteRate = 0.5f;
         _traceState = TraceState.drawing;
     }
@@ -103,9 +103,18 @@ public class Trace : MonoBehaviour
                 _points.Add(newPos);
             else
             {
-                float distanceFromLast = Vector3.Distance(newPos, _points[_points.Count - 1]);
-                if (distanceFromLast >= _minDistanceBetweenPoints)
-                    _points.Add(newPos);
+                Vector3 currentPos = newPos;
+                Vector3 lastsPos = _points[_points.Count - 1];
+                float distanceFromLast = Vector3.Distance(currentPos, lastsPos);
+
+                while(distanceFromLast > _minDistanceBetweenPoints)
+                {
+                    lastsPos = Vector3.MoveTowards(lastsPos, currentPos, _minDistanceBetweenPoints);
+                    _points.Add(lastsPos);
+                    distanceFromLast = Vector3.Distance(currentPos, lastsPos);
+                }
+                //if (distanceFromLast >= _minDistanceBetweenPoints)
+                //    _points.Add(newPos);
             }
         }
     }

@@ -23,7 +23,11 @@ public class WinZone : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            OnPlayerEnterWinZone();
+            if(OnPlayerEnterWinZone != null)
+            {
+                Debug.Log("OnPlayerEnterWinZone");
+                OnPlayerEnterWinZone();
+            }
         }
     }
 

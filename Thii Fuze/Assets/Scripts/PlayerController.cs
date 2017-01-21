@@ -41,10 +41,16 @@ public class PlayerController : MonoBehaviour
         Vector2 move = moveJ1 + moveJ2;
         rb.velocity -= velocity;
         velocity = move * Speed * Time.deltaTime;
-        rb.velocity += velocity;
-
-        if (_trace.getTraceState() == Trace.TraceState.drawing)
-            _trace.addPoint(transform.position);
+        rb.velocity += velocity;        
+        try
+        {
+            if (_trace.getTraceState() == Trace.TraceState.drawing)
+                _trace.addPoint(transform.position);
+        }
+        catch
+        {
+            Debug.LogWarning("Trace system not setup in scene.");
+        }
     }
 
     public void setTrace(Trace trace)

@@ -5,12 +5,33 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class Travolator : MonoBehaviour {
 
-    [Range(-1, 1)]
-    public float Direction;
-    public float MaxSpeed;
+    private IDirectionalArea _controller;
+
+    //[Range(-1, 1)]
+    public float Direction
+    {
+        get
+        {
+            return _controller.GetDirection();
+        }
+    }
+
+    public float MaxSpeed
+    {
+        get
+        {
+            const float debug_multiplicator = 400;
+            return _controller.GetVelocity() * debug_multiplicator;
+        }
+    }
 
     Vector2 velocity;
-    
+
+    void Start()
+    {
+        _controller = GetComponent<IDirectionalArea>();
+    }
+
     void Update()
     {
     }
