@@ -20,6 +20,7 @@ public class Bomb : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Player") && !bombInitiated)
         {
+            Debug.Log("OnPlayerInitiateBomb");
             OnPlayerInitiateBomb();
         }
     }

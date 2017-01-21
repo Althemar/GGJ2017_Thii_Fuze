@@ -41,8 +41,7 @@ public class PlayerController : MonoBehaviour
         Vector2 move = moveJ1 + moveJ2;
         rb.velocity -= velocity;
         velocity = move * Speed * Time.deltaTime;
-        rb.velocity += velocity;
-        
+        rb.velocity += velocity;        
         try
         {
             if (_trace.getTraceState() == Trace.TraceState.drawing)
