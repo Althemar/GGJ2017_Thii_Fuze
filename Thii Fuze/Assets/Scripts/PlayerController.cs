@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
         }
         catch
         {
-            Debug.Log("Trace system not setup in scene.");
+            Debug.LogWarning("Trace system not setup in scene.");
         }
     }
 }
