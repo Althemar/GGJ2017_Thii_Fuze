@@ -14,6 +14,9 @@ public class Trace : MonoBehaviour
     private static int ID_TRACE = 0;
     private int _idTrace;
 
+    public GameObject FireParticles;
+
+
     private List<Vector3> _points;
     private LineRenderer _lineRenderer;
 
@@ -31,6 +34,9 @@ public class Trace : MonoBehaviour
     private bool _deleteLast;
 
     private IEnumerator _coroutine;
+
+    GameObject fireParticle;
+    GameObject fireParticleLast;
 
     private void Awake()
     {
@@ -149,6 +155,11 @@ public class Trace : MonoBehaviour
 
             if (_points.Count > 0 && _deleteFirst)
             {
+                if (fireParticle == null)
+                {
+                    fireParticle = Instantiate(FireParticles, transform);
+                }
+                fireParticle.transform.position = _points[0];
                 _points.RemoveAt(0);
                 if (_points.Count > 1)
                 {
@@ -158,6 +169,11 @@ public class Trace : MonoBehaviour
             }
             if (_points.Count > 0 && _deleteLast)
             {
+                if (fireParticleLast == null)
+                {
+                    fireParticleLast = Instantiate(FireParticles, transform);
+                }
+                fireParticleLast.transform.position = _points[_points.Count - 1];
                 _points.RemoveAt(_points.Count - 1);
                 if (_points.Count > 1)
                 {
