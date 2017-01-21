@@ -18,12 +18,12 @@ public class PlayerController : MonoBehaviour
         _trace = GetComponent<Trace>();
     }
 
-    void LateUpdate()
+    void Update()
     {
         Vector2 move;
-        rb.velocity -= velocity;
         move.x = Input.GetAxis("HorizontalJ1") + Input.GetAxis("HorizontalJ2");
         move.y = Input.GetAxis("VerticalJ1") + Input.GetAxis("VerticalJ2");
+        rb.velocity -= velocity;
         velocity = move * Speed * Time.deltaTime;
         rb.velocity += velocity;
 
