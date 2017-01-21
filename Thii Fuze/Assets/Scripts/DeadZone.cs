@@ -12,7 +12,11 @@ public class DeadZone : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            OnPlayerEnterDeadZone();
+            if(OnPlayerEnterDeadZone != null)
+            {
+                Debug.Log("OnPlayerEnterDeadZone");
+                OnPlayerEnterDeadZone();
+            }
         }
     }
 

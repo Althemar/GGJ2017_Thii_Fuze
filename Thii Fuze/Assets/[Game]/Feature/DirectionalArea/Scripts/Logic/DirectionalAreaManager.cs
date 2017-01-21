@@ -29,8 +29,8 @@ public class DirectionalAreaManager : MonoBehaviour {
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(0.5f, 3.0f));
-            StartCoroutine(Wave(controllerList, Random.Range(2f, 8f)));
+            yield return new WaitForSeconds(Random.Range(0.25f, 2.0f));
+            StartCoroutine(Wave(controllerList, Random.Range(4f, 8f)));
         }
     }
 
