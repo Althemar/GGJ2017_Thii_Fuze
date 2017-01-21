@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
 
     public float Speed;
 
@@ -19,7 +18,8 @@ public class PlayerController : MonoBehaviour {
         _trace = GetComponent<Trace>();
     }
 
-    void LateUpdate () {
+    void LateUpdate()
+    {
         Vector2 move;
         rb.velocity -= velocity;
         move.x = Input.GetAxis("HorizontalJ1") + Input.GetAxis("HorizontalJ2");
@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour {
         rb.AddForce(move * Speed * Time.deltaTime);
         rb.velocity += velocity;
 
-        _trace.addPoint(transform.position);
-	}
+        if (_trace.getTraceState() == Trace.TraceState.drawing)
+            _trace.addPoint(transform.position);
+    }
 }
