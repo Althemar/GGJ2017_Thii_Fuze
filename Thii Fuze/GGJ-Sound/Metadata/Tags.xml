@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.08.00">
+    <object class="MasterTagFolder" id="{ed806631-9f77-4e08-8683-7f6d61039aa3}">
+        <property name="name">
+            <value>Master</value>
+        </property>
+        <relationship name="items">
+            <destination>{654f5bc4-1446-499a-96a0-821a228cc069}</destination>
+            <destination>{db5e6a8d-bddf-4be8-8f8b-fa08559c84bd}</destination>
+            <destination>{1dd3d693-e3b4-42f5-86de-bfabf2723d21}</destination>
+        </relationship>
+    </object>
+    <object class="Tag" id="{654f5bc4-1446-499a-96a0-821a228cc069}">
+        <property name="name">
+            <value>SFX</value>
+        </property>
+        <relationship name="folder">
+            <destination>{ed806631-9f77-4e08-8683-7f6d61039aa3}</destination>
+        </relationship>
+    </object>
+    <object class="Tag" id="{db5e6a8d-bddf-4be8-8f8b-fa08559c84bd}">
+        <property name="name">
+            <value>Music</value>
+        </property>
+        <relationship name="folder">
+            <destination>{ed806631-9f77-4e08-8683-7f6d61039aa3}</destination>
+        </relationship>
+    </object>
+    <object class="Tag" id="{1dd3d693-e3b4-42f5-86de-bfabf2723d21}">
+        <property name="name">
+            <value>Ambience</value>
+        </property>
+        <relationship name="folder">
+            <destination>{ed806631-9f77-4e08-8683-7f6d61039aa3}</destination>
+        </relationship>
+    </object>
+</objects>
