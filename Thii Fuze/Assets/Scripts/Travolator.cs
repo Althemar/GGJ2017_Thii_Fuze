@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class Tapis : MonoBehaviour
-{
+public class Travolator : MonoBehaviour {
 
     private IDirectionalArea _controller;
 
@@ -39,13 +38,14 @@ public class Tapis : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
         velocity = new Vector2(0, MaxSpeed * Direction * Time.deltaTime);
+        Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
         rb.velocity += velocity;
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+
         Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
         rb.velocity -= velocity;
         velocity = new Vector2(0, MaxSpeed * Direction * Time.deltaTime);
