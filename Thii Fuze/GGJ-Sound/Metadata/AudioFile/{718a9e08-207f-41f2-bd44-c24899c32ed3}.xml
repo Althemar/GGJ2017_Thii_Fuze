@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.08.00">
+    <object class="AudioFile" id="{718a9e08-207f-41f2-bd44-c24899c32ed3}">
+        <property name="assetPath">
+            <value>ELoop1.wav</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>4.4582312925170067</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{05b9504e-87bf-44e4-9b16-a8d55577913c}</destination>
+        </relationship>
+    </object>
+</objects>
