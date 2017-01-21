@@ -28,7 +28,14 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(move * Speed * Time.deltaTime);
         rb.velocity += velocity;
 
-        if (_trace.getTraceState() == Trace.TraceState.drawing)
-            _trace.addPoint(transform.position);
+        try
+        {
+            if (_trace.getTraceState() == Trace.TraceState.drawing)
+                _trace.addPoint(transform.position);
+        }
+        catch
+        {
+            Debug.Log("Trace system not setup in scene.");
+        }
     }
 }

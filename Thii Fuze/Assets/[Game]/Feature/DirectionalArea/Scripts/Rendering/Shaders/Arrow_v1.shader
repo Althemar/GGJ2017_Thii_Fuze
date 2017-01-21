@@ -5,7 +5,7 @@
 		[NoScaleOffset] _MainTex("Texture", 2D) = "white" {}
 		_Slider("Slider", Float) = 1
 		_Direction("Direction", Range(-1,1)) = 1
-		_AnimationTime("AnimationTime", Float) = 1
+		_AnimationTime("AnimationTime", Float) = 0
 
 		_Width("Width", Float) = 1
 		_Thickness("Thickness", Float) = 1
