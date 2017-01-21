@@ -3,6 +3,12 @@
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
+
+    public GameObject arrowJ1;
+    public GameObject arrowJ2;
+
+    public float arrowDistance = 1f;
+
     public enum PlayerState
     {
         toBomb,
@@ -26,9 +32,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        Vector2 move;
-        move.x = Input.GetAxis("HorizontalJ1") + Input.GetAxis("HorizontalJ2");
-        move.y = Input.GetAxis("VerticalJ1") + Input.GetAxis("VerticalJ2");
+        Vector2 moveJ1;
+        Vector2 moveJ2;
+        moveJ1 = new Vector2(Input.GetAxis("HorizontalJ1"), Input.GetAxis("VerticalJ1"));
+        moveJ2 = new Vector2(Input.GetAxis("HorizontalJ2"), Input.GetAxis("VerticalJ2"));
+        arrowJ1.transform.localPosition = moveJ1 * arrowDistance;
+        arrowJ2.transform.localPosition = moveJ2 * arrowDistance;
+        Vector2 move = moveJ1 + moveJ2;
         rb.velocity -= velocity;
         velocity = move * Speed * Time.deltaTime;
         rb.velocity += velocity;
