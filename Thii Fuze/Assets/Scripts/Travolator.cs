@@ -20,7 +20,7 @@ public class Travolator : MonoBehaviour {
     {
         get
         {
-            const float debug_multiplicator = 500;
+            const float debug_multiplicator = 400;
             return _controller.GetVelocity() * debug_multiplicator;
         }
     }

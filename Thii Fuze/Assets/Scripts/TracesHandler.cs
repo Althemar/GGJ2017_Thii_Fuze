@@ -12,6 +12,12 @@ public class TracesHandler : MonoBehaviour {
 
     private Vector3 _lastTraceCross;
 
+    public delegate void OnIntersectionHappenedHandler(Vector3 intersectionPosition);
+    public OnIntersectionHappenedHandler eOnIntersectionHappened;
+
+    [Header("Prefabs")]
+    public GameObject intersectionPrefab;
+
     // Use this for initialization
     void Awake() {
         _playerController = _player.GetComponent<PlayerController>();
@@ -30,9 +36,14 @@ public class TracesHandler : MonoBehaviour {
         _lastTraceCross = _playerController.GetComponent<Transform>().position;
     }
 
-    // Update is called once per frame
-    void Update() {
-
+    void Start()
+    {
+        eOnIntersectionHappened += InstanceIntersectionIndicator;
+    }
+    
+    void OnDestroy()
+    {
+        eOnIntersectionHappened -= InstanceIntersectionIndicator;
     }
 
     public void beginBurn()
@@ -60,6 +71,11 @@ public class TracesHandler : MonoBehaviour {
             {
                 if (Vector3.Distance(_traces[i].getPoints()[j], newPos) <= minDistanceBetweenPoints && Vector3.Distance(_lastTraceCross, newPos) >= minDistanceBetweenPoints)
                 {
+                    // Intersected
+                    if(eOnIntersectionHappened != null)
+                    {
+                        eOnIntersectionHappened(newPos);
+                    }
 
                     Trace traceCrossed = _traces[i];
                     _lastTraceCross = newPos;
@@ -135,4 +151,11 @@ public class TracesHandler : MonoBehaviour {
         _playerController.setTrace(newTrace);
     }
 
+
+    private void InstanceIntersectionIndicator(Vector3 position)
+    {
+        GameObject intersectionGo = Instantiate(intersectionPrefab);
+        intersectionGo.name = "Intersection";
+        intersectionGo.transform.position = position;
+    }
 }
