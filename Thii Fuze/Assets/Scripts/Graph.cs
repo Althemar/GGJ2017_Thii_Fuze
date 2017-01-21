@@ -66,6 +66,18 @@ public class Graph
         return false;
     }
 
+    public Edge getEdgeWithId(int id)
+    {
+        for (int i = 0; i < _edges.Count; i++)
+        {
+            if (_edges[i].getId() == id)
+            {
+                return _edges[i];
+            }
+        }
+        return null;
+    }
+
     public string printGraph()
     {
         string nodeString = "";

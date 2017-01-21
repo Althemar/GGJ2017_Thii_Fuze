@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Edge
+﻿public class Edge
 {
 
     private int _id;
@@ -34,5 +30,4 @@ public class Edge
     {
         return _node2;
     }
-
 }

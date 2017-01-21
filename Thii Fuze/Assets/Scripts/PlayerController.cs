@@ -43,8 +43,6 @@ public class PlayerController : MonoBehaviour
         velocity = move * Speed * Time.deltaTime;
         rb.velocity += velocity;
 
-        print(_trace.getIdTrace());
-
         if (_trace.getTraceState() == Trace.TraceState.drawing)
             _trace.addPoint(transform.position);
     }
