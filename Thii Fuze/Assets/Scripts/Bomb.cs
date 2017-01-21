@@ -7,6 +7,7 @@ public class Bomb : MonoBehaviour {
 
     public delegate void BombEvent();
     public static event BombEvent OnPlayerInitiateBomb;
+    public static event BombEvent OnBombExplosion;
 
     bool bombInitiated = false;
 
