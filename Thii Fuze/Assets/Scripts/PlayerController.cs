@@ -50,18 +50,6 @@ public class PlayerController : MonoBehaviour
 
         if (_playerState == PlayerState.toBomb)
             _trace.addPoint(transform.position);
-        /*
-        try
-        {
-            if (_playerState == PlayerState.toBomb)
-                _trace.addPoint(transform.position);
-        }
-        catch
-        {
-            Debug.LogWarning("Trace system not setup in scene.");
-        }
-        */
-
     }
 
     public void setTrace(Trace trace)

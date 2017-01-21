@@ -29,6 +29,11 @@ public class Node
         return _neighbours;
     }
 
+    public GameObject getCrossSign()
+    {
+        return _crossSign;
+    }
+
     public void setCrossSign(GameObject crossSign)
     {
         _crossSign = crossSign;

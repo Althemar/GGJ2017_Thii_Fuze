@@ -6,11 +6,14 @@ public class TracesHandler : MonoBehaviour {
     public GameObject _player;
     public GameObject _traceToCreate;
 
+    public float minCrossSignDistance = 40f;
+
     private PlayerController _playerController;
     private List<Trace> _traces;
     private Graph _graph;
 
     private Vector3 _lastTraceCross;
+    private Node _losingNode;
 
     public delegate GameObject OnIntersectionHappenedHandler(Vector3 intersectionPosition);
     public OnIntersectionHappenedHandler eOnIntersectionHappened;
@@ -29,7 +32,6 @@ public class TracesHandler : MonoBehaviour {
         _traces.Add(trace.GetComponent<Trace>());
         _playerController.setTrace(trace.GetComponent<Trace>());
         
-
         _graph = new Graph();
         _graph.addNode();
 
@@ -53,6 +55,8 @@ public class TracesHandler : MonoBehaviour {
         Node previousNode = _graph.getNodes()[_graph.getNodes().Count - 1];
         Node newNode = _graph.addNode();
         _graph.createTransition(previousNode, newNode, _traces[_traces.Count - 1].getIdTrace());
+        _losingNode = newNode;
+        setCurrentTrace();
 
         if (_traces.Count != 0)
         {
@@ -70,10 +74,14 @@ public class TracesHandler : MonoBehaviour {
             followingNode = currentEdge.getNodeLast();
         else
             followingNode = currentEdge.getNodeFirst();
-        followingNode.release();
 
-        print(_graph.printGraph());
-        print(followingNode.getId());
+        if (followingNode == _losingNode)
+        {
+            // LOST
+        }
+            
+
+        followingNode.release();
 
         bool activate = false;
         bool burnFirst = false;
@@ -103,7 +111,6 @@ public class TracesHandler : MonoBehaviour {
 
                         if (trace.getIdTrace() == edge.getId())
                         {
-                            print("Burn " + edge.getId());
                             trace.activateDeleting();
                             trace.burnFirst(burnFirst);
                             trace.burnLast(burnLast);
@@ -134,12 +141,9 @@ public class TracesHandler : MonoBehaviour {
                 if (Vector3.Distance(_traces[i].getPoints()[j], newPos) <= minDistanceBetweenPoints && Vector3.Distance(_lastTraceCross, newPos) >= 2* minDistanceBetweenPoints)
                 {
                     // Intersected
-                    GameObject crossSign = null;
-                    if(eOnIntersectionHappened != null)
-                    {
-                        crossSign = eOnIntersectionHappened(newPos);
-                    }
- 
+                    Debug.Log("Collision");
+
+
                     Trace traceCrossed = _traces[i];
                     _lastTraceCross = newPos;
 
@@ -151,10 +155,13 @@ public class TracesHandler : MonoBehaviour {
 
                         Node oldNode = _graph.getNodes()[_graph.getNodes().Count - 1];
                         Node newNode = _graph.addNode();
-                        newNode.setCrossSign(crossSign);
+
+                        
 
                         _graph.createTransition(oldNode, newNode, traceCrossed.getIdTrace());
                         _graph.createTransition(newNode, newNode, newTrace.getIdTrace());
+
+                        //drawCrossSign(newNode, newPos);
 
                         setCurrentTrace();
                     }
@@ -178,14 +185,18 @@ public class TracesHandler : MonoBehaviour {
 
                         Node previousNode = _graph.getNodes()[_graph.getNodes().Count - 1];
                         Node newNode = _graph.addNode();
-                        newNode.setCrossSign(crossSign);
-
+                        
                         _graph.createTransition(previousNode, newNode, previousTraceId);
                         _graph.createTransition(node1, newNode, traceCrossed.getIdTrace());
                         _graph.createTransition(newNode, node2, newTrace.getIdTrace());
 
+                        //drawCrossSign(newNode, newPos);
+
                         setCurrentTrace();
                     }
+
+                    print(_graph.printGraph());
+
                     return true;
                 }
             }
@@ -232,5 +243,26 @@ public class TracesHandler : MonoBehaviour {
         intersectionGo.transform.position = position;
 
         return intersectionGo;
+    }
+
+    private void drawCrossSign(Node newNode, Vector3 newPos)
+    {
+        GameObject crossSign = null;
+        bool drawCrossSign = true;
+        foreach (Node neighbour in newNode.getNeighbours())
+        {
+
+            if (neighbour.getCrossSign() != null  && Vector3.Distance(neighbour.getCrossSign().transform.position, newPos) < minCrossSignDistance)
+            {
+                drawCrossSign = false;
+            }
+        }
+
+        if (drawCrossSign && eOnIntersectionHappened != null)
+        {
+            crossSign = eOnIntersectionHappened(newPos);
+        }
+
+        newNode.setCrossSign(crossSign);
     }
 }
