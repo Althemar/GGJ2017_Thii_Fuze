@@ -25,7 +25,6 @@ public class PlayerController : MonoBehaviour
         move.x = Input.GetAxis("HorizontalJ1") + Input.GetAxis("HorizontalJ2");
         move.y = Input.GetAxis("VerticalJ1") + Input.GetAxis("VerticalJ2");
         velocity = move * Speed * Time.deltaTime;
-        rb.AddForce(move * Speed * Time.deltaTime);
         rb.velocity += velocity;
 
         if (_trace.getTraceState() == Trace.TraceState.drawing)
