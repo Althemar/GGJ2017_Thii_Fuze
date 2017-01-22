@@ -8,16 +8,17 @@ public class Trace : MonoBehaviour
     public enum TraceState
     {
         drawing,
-        deleting
+        deleting,
     };
 
     private static int ID_TRACE = 0;
     private int _idTrace;
 
     public GameObject FireParticles;
+    public GameObject _ashToCreate;
 
 
-    private List<Vector3> _points;
+    public List<Vector3> _points;
     private LineRenderer _lineRenderer;
 
     private TraceState _traceState;
@@ -33,10 +34,13 @@ public class Trace : MonoBehaviour
     private bool _deleteFirst;
     private bool _deleteLast;
 
+    private Ashes _ashesFirst;
+    private Ashes _ashesLast;
+
     private IEnumerator _coroutine;
 
-    GameObject fireParticle;
-    GameObject fireParticleLast;
+    private GameObject _fireParticle;
+    private GameObject _fireParticleLast;
 
     private void Awake()
     {
@@ -47,6 +51,7 @@ public class Trace : MonoBehaviour
         _minDistanceBetweenPoints = 1/18f;
         _deleteRate = 0.001f;
         _traceState = TraceState.drawing;
+       
     }
 
     private void Update()
@@ -68,10 +73,11 @@ public class Trace : MonoBehaviour
             case TraceState.drawing:
                 break;
         }
-
+        
         _lineRenderer.numPositions = _points.Count;
         for (int i = 0; i < _points.Count; i++)
             _lineRenderer.SetPosition(i, _points[i]);
+        
     }
 
     /*
@@ -120,6 +126,7 @@ public class Trace : MonoBehaviour
                     lastsPos = Vector3.MoveTowards(lastsPos, currentPos, _minDistanceBetweenPoints);
                     _points.Add(lastsPos);
                     distanceFromLast = Vector3.Distance(currentPos, lastsPos);
+                    
                 }
             }
         }
@@ -127,6 +134,21 @@ public class Trace : MonoBehaviour
 
     public void activateDeleting()
     {
+
+
+        GameObject ashFirst = Instantiate(_ashToCreate);
+        GameObject ashLast = Instantiate(_ashToCreate);
+
+        _ashesFirst = ashFirst.GetComponent<Ashes>();
+        _ashesLast = ashLast.GetComponent<Ashes>();
+
+        ashFirst.transform.parent = transform;
+        ashLast.transform.parent = transform;
+
+        transform.parent.gameObject.GetComponent<TracesHandler>().addAshes(ashFirst.GetComponent<Ashes>());
+        transform.parent.gameObject.GetComponent<TracesHandler>().addAshes(ashLast.GetComponent<Ashes>());
+        
+
         if (_traceState != TraceState.deleting)
         {
             _traceState = TraceState.deleting;
@@ -155,47 +177,54 @@ public class Trace : MonoBehaviour
 
             if (_points.Count > 0 && _deleteFirst)
             {
-                if (fireParticle == null)
-                {
-                    fireParticle = Instantiate(FireParticles, transform);
-                }
-                fireParticle.transform.position = _points[0];
-                _points.RemoveAt(0);
-                if (_points.Count > 1)
-                {
-                    float distanceToNextPoint = Vector3.Distance(_points[0], _points[1]);
-                    _distanceToMoveFirst = distanceToNextPoint / (_deleteRate * 60);
-                }
+                _ashesFirst.addPoint(_points[0]);
+                removePoint(0);
             }
             if (_points.Count > 0 && _deleteLast)
             {
-                if (fireParticleLast == null)
-                {
-                    fireParticleLast = Instantiate(FireParticles, transform);
-                }
-                fireParticleLast.transform.position = _points[_points.Count - 1];
-                _points.RemoveAt(_points.Count - 1);
-                if (_points.Count > 1)
-                {
-                    float distanceToNextPoint = Vector3.Distance(_points[_points.Count - 1], _points[_points.Count - 2]);
-                    _distanceToMoveLast = distanceToNextPoint / (_deleteRate * 60);
-                }
+                _ashesLast.addPoint(_points[_points.Count - 1]);
+                removePoint(_points.Count - 1);
             }
-
             if (_points.Count == 0)
             {
                 if (_deleteFirst && !_deleteLast)
                     transform.parent.gameObject.GetComponent<TracesHandler>().burnFollowing(_idTrace, true);
                 else if (_deleteLast && !_deleteFirst)
                     transform.parent.gameObject.GetComponent<TracesHandler>().burnFollowing(_idTrace, false);
-                Destroy(gameObject);
+                StopCoroutine(_coroutine);
             }
         }      
     }
 
-    private float removePoint(int removeIndex, int neighbourIndex)
+    private void removePoint(int removeIndex)
     {
-        
-        return 0;
+        instantiateParticule(removeIndex);
+
+        _points.RemoveAt(removeIndex);
+        if (_points.Count > 1)
+        {
+            int neighbourIndex;
+            if (removeIndex == 0)
+                neighbourIndex = 1;
+            else if (removeIndex == _points.Count - 1)
+            {
+                removeIndex--;
+                neighbourIndex = removeIndex - 1;
+            }
+                
+            else
+                return;
+            float distanceToNextPoint = Vector3.Distance(_points[removeIndex], _points[neighbourIndex]);
+            _distanceToMoveFirst = distanceToNextPoint / (_deleteRate * 60);
+        }
+    }
+
+    private void instantiateParticule(int pointIndex)
+    {
+        if (_fireParticleLast == null)
+        {
+            _fireParticleLast = Instantiate(FireParticles, transform);
+        }
+        _fireParticleLast.transform.position = _points[pointIndex];
     }
 }
