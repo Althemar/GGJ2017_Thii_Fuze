@@ -27,6 +27,7 @@ public class SceneSwitcher : MonoBehaviour
         _instance = this;
 
         PlayerController.eDied += OnPlayerDied;
+        GameController.OnGameWon += OnPlayerWin;
 
     }
 
@@ -52,11 +53,17 @@ public class SceneSwitcher : MonoBehaviour
     private void OnDestroy()
     {
         PlayerController.eDied -= OnPlayerDied;
+        GameController.OnGameWon -= OnPlayerWin;
     }
 
     private void OnPlayerDied()
     {
         StartCoroutine(Lose());
+    }
+
+    void OnPlayerWin()
+    {
+        StartCoroutine(Win());
     }
 
 	IEnumerator Back()
