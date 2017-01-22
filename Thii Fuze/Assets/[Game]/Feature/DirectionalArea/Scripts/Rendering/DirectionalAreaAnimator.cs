@@ -35,6 +35,16 @@ public class DirectionalAreaAnimator : MonoBehaviour {
     private void Update()
     {
         _animationTime += Time.deltaTime * -controller.GetDirection() * controller.GetVelocity();
+        if(!controller.IsActive())
+        {
+            const float steps = 1f/8f;
+            _animationTime = Mathf.MoveTowards(
+                (float)_animationTime,
+                Mathf.Round(((float)_animationTime / steps))
+                * steps,
+                0.25f * Time.deltaTime
+                );
+        }
     }
     
     public void OnRenderObject()

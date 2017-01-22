@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class DirectionalAreaController : MonoBehaviour, IDirectionalArea {
     public float direction;
 
     public float velocity = 1;
+
+    public bool active = true;
 
     public enum Direction : int
     {
@@ -54,5 +57,10 @@ public class DirectionalAreaController : MonoBehaviour, IDirectionalArea {
     public float GetVelocity()
     {
         return velocity;
+    }
+
+    public bool IsActive()
+    {
+        return active;
     }
 }

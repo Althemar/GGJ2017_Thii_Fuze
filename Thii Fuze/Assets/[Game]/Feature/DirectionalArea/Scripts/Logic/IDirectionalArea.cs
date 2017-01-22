@@ -8,4 +8,5 @@ public interface IDirectionalArea {
 
     float GetVelocity();
 
+    bool IsActive();
 }

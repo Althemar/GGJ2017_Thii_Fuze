@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class SceneSwitcher : MonoBehaviour 
 {
-	Button back;
+    private SceneSwitcher _instance;
+
+    Button back;
 
 	Button startGame;
 	Button highScore;
@@ -18,15 +20,15 @@ public class SceneSwitcher : MonoBehaviour
 
 	Scene[] scenes;
 
-	public FMODUnity.StudioEventEmitter fmodEmiter_menu;
-	public FMODUnity.StudioEventEmitter fmodEmiter_win;
-	public FMODUnity.StudioEventEmitter fmodEmiter_lose;
-
 	void Awake()
 	{
 		SceneManager.LoadScene(1, LoadSceneMode.Additive);
 		scenes = SceneManager.GetAllScenes();
-	}
+        _instance = this;
+
+        PlayerController.eDied += OnPlayerDied;
+
+    }
 
 	void Start()
 	{
@@ -45,17 +47,20 @@ public class SceneSwitcher : MonoBehaviour
 			StartCoroutine(SeeCredits());
 		});
 		quit.onClick.AddListener (Quit);
-
-		fmodEmiter_menu.Play();
 	}
+
+    private void OnDestroy()
+    {
+        PlayerController.eDied -= OnPlayerDied;
+    }
+
+    private void OnPlayerDied()
+    {
+        StartCoroutine(Lose());
+    }
 
 	IEnumerator Back()
 	{
-		if(scenes[1].name == "Win Screen")
-		{
-			fmodEmiter_win.Play();
-			fmodEmiter_menu.Play();
-		}
 		SceneManager.UnloadSceneAsync(scenes[1]);
 		AsyncOperation loading = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
 		yield return new WaitUntil(() => loading.isDone);
@@ -75,14 +80,12 @@ public class SceneSwitcher : MonoBehaviour
 		});
 		quit.onClick.AddListener (Quit);
 		scenes = SceneManager.GetAllScenes();
-
-
 	}
 
 	IEnumerator StartGame()
 	{
-		SceneManager.UnloadSceneAsync(scenes[1]);
-		AsyncOperation loading = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
+        AsyncOperation unloading = SceneManager.UnloadSceneAsync(scenes[1]);
+        AsyncOperation loading = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
 		yield return new WaitUntil(() => loading.isDone);
 //		win = GameObject.Find("Win").GetComponent<Button>();
 //		lose = GameObject.Find("Lose").GetComponent<Button>();
@@ -93,9 +96,6 @@ public class SceneSwitcher : MonoBehaviour
 //			StartCoroutine(Lose());
 //		});
 		scenes = SceneManager.GetAllScenes();
-
-		fmodEmiter_menu.Stop();
-
 	}
 
 	IEnumerator Win()
@@ -108,15 +108,26 @@ public class SceneSwitcher : MonoBehaviour
 			StartCoroutine(Back());
 		});
 		scenes = SceneManager.GetAllScenes();
+	}
 
-		fmodEmiter_win.Play();
-
+	IEnumerator Lose()
+	{
+        AsyncOperation unloading = SceneManager.UnloadSceneAsync(scenes[1]);
+        //yield return new WaitUntil(() => unloading.isDone);
+        AsyncOperation loading = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive); // Directly reload the level on loss.
+        //AsyncOperation loading = SceneManager.LoadSceneAsync(4, LoadSceneMode.Additive);
+        yield return new WaitUntil(() => loading.isDone);
+		//back = GameObject.Find("Back").GetComponent<Button>();
+		//back.onClick.AddListener (delegate {
+		//	StartCoroutine(Back());
+		//});
+		scenes = SceneManager.GetAllScenes();
 	}
 
 	IEnumerator SeeHighScore()
 	{
 		SceneManager.UnloadSceneAsync(scenes[1]);
-		AsyncOperation loading = SceneManager.LoadSceneAsync(4, LoadSceneMode.Additive);
+		AsyncOperation loading = SceneManager.LoadSceneAsync(5, LoadSceneMode.Additive);
 		yield return new WaitUntil(() => loading.isDone);
 		back = GameObject.Find("Back").GetComponent<Button>();
 		back.onClick.AddListener (delegate {
@@ -128,7 +139,7 @@ public class SceneSwitcher : MonoBehaviour
 	IEnumerator SeeCredits()
 	{
 		SceneManager.UnloadSceneAsync(scenes[1]);
-		AsyncOperation loading = SceneManager.LoadSceneAsync(5, LoadSceneMode.Additive);
+		AsyncOperation loading = SceneManager.LoadSceneAsync(6, LoadSceneMode.Additive);
 		yield return new WaitUntil(() => loading.isDone);
 		back = GameObject.Find("Back").GetComponent<Button>();
 		back.onClick.AddListener (delegate {

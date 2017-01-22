@@ -38,6 +38,10 @@ public class Travolator : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<PlayerController>().isOnTapis = true;
+        }
         velocity = transform.up * MaxSpeed * Direction * Time.deltaTime;
         Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
         rb.velocity += velocity;
@@ -45,7 +49,10 @@ public class Travolator : MonoBehaviour {
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-
+        if (collision.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<PlayerController>().isOnTapis = true;
+        }
         Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
         rb.velocity -= velocity;
         velocity = transform.up * MaxSpeed * Direction * Time.deltaTime;
@@ -54,6 +61,10 @@ public class Travolator : MonoBehaviour {
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (collision.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<PlayerController>().isOnTapis = false;
+        }
         Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
         rb.velocity -= velocity;
     }
