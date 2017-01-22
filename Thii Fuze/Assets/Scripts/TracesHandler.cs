@@ -122,8 +122,6 @@ public class TracesHandler : MonoBehaviour {
         {
             if (edge.getId() != idTrace)
             {
-
-
                 if (edge.getNodeFirst() == followingNode)
                 {
                     activate = true;
@@ -149,7 +147,8 @@ public class TracesHandler : MonoBehaviour {
                             activate = false;
                             burnFirst = false;
                             burnLast = false;
-                            //OnBeginBurnFuse();
+                            if (OnBeginBurnFuse != null)
+                                OnBeginBurnFuse();
                         }
                     }
                 }
@@ -165,10 +164,10 @@ public class TracesHandler : MonoBehaviour {
                 break;
             }
         }
-        /*
-        if (!anyFuseBurning)
+        
+        if (!anyFuseBurning && OnAllBurningStopped != null)
             OnAllBurningStopped();
-            */
+            
     }
 
     public bool checkCollision(Vector3 newPos, float minDistanceBetweenPoints, int idTrace)
