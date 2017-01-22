@@ -108,6 +108,7 @@ public class PlayerController : MonoBehaviour
         rb.velocity += velocity;
 
         if (_playerState == PlayerState.toBomb)
+            
             _trace.addPoint(transform.position);
     }
 

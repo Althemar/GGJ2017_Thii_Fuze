@@ -13,7 +13,9 @@ public class SoundManager : MonoBehaviour
 	public FMODUnity.StudioEventEmitter fmodEmiter_Clear;
     public FMODUnity.StudioEventEmitter fmodEmiter_Electocuted;
 
-    public FMODUnity.StudioEventEmitter fmodEmiter_Ambience;
+    public FMODUnity.StudioEventEmitter fmodEmiter_Menu;
+	public FMODUnity.StudioEventEmitter fmodEmiter_Ambience;
+	public FMODUnity.StudioEventEmitter fmodEmiter_Victory;
 
 	public void Start()
 	{
@@ -96,4 +98,21 @@ public class SoundManager : MonoBehaviour
         fmodEmiter_Electocuted.Play();
     }
 
+	public void PlayMenu()
+	{
+		fmodEmiter_Menu.Play();
+		fmodEmiter_Victory.Stop();
+	}
+
+	public void PlayAmbience()
+	{
+		fmodEmiter_Ambience.Play();
+		fmodEmiter_Menu.Stop();
+	}
+
+	public void PlayVictory()
+	{
+		fmodEmiter_Victory.Play();
+		fmodEmiter_Ambience.Stop();
+	}
 }

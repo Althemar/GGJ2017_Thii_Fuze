@@ -8,6 +8,8 @@ public class SceneSwitcher : MonoBehaviour
 {
     private SceneSwitcher _instance;
 
+	public SoundManager sound;
+
     Button back;
 
 	Button startGame;
@@ -48,6 +50,8 @@ public class SceneSwitcher : MonoBehaviour
 			StartCoroutine(SeeCredits());
 		});
 		quit.onClick.AddListener (Quit);
+
+		sound.PlayMenu();
 	}
 
     private void OnDestroy()
@@ -68,6 +72,10 @@ public class SceneSwitcher : MonoBehaviour
 
 	IEnumerator Back()
 	{
+		if(scenes[1].name == "Win Screen")
+		{
+			sound.PlayMenu();
+		}
 		SceneManager.UnloadSceneAsync(scenes[1]);
 		AsyncOperation loading = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
 		yield return new WaitUntil(() => loading.isDone);
@@ -87,10 +95,12 @@ public class SceneSwitcher : MonoBehaviour
 		});
 		quit.onClick.AddListener (Quit);
 		scenes = SceneManager.GetAllScenes();
+
 	}
 
 	IEnumerator StartGame()
 	{
+		sound.PlayAmbience();
         AsyncOperation unloading = SceneManager.UnloadSceneAsync(scenes[1]);
         AsyncOperation loading = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
 		yield return new WaitUntil(() => loading.isDone);
@@ -107,6 +117,7 @@ public class SceneSwitcher : MonoBehaviour
 
 	IEnumerator Win()
 	{
+		sound.PlayVictory();
 		SceneManager.UnloadSceneAsync(scenes[1]);
 		AsyncOperation loading = SceneManager.LoadSceneAsync(3, LoadSceneMode.Additive);
 		yield return new WaitUntil(() => loading.isDone);
@@ -134,7 +145,7 @@ public class SceneSwitcher : MonoBehaviour
 	IEnumerator SeeHighScore()
 	{
 		SceneManager.UnloadSceneAsync(scenes[1]);
-		AsyncOperation loading = SceneManager.LoadSceneAsync(5, LoadSceneMode.Additive);
+		AsyncOperation loading = SceneManager.LoadSceneAsync(4, LoadSceneMode.Additive);
 		yield return new WaitUntil(() => loading.isDone);
 		back = GameObject.Find("Back").GetComponent<Button>();
 		back.onClick.AddListener (delegate {
@@ -146,7 +157,7 @@ public class SceneSwitcher : MonoBehaviour
 	IEnumerator SeeCredits()
 	{
 		SceneManager.UnloadSceneAsync(scenes[1]);
-		AsyncOperation loading = SceneManager.LoadSceneAsync(6, LoadSceneMode.Additive);
+		AsyncOperation loading = SceneManager.LoadSceneAsync(5, LoadSceneMode.Additive);
 		yield return new WaitUntil(() => loading.isDone);
 		back = GameObject.Find("Back").GetComponent<Button>();
 		back.onClick.AddListener (delegate {

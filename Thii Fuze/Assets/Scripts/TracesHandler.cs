@@ -12,12 +12,19 @@ public class TracesHandler : MonoBehaviour {
     private List<Trace> _traces;
     private List<Ashes> _ashes;
     private Graph _graph;
+    private int nbPoints;
 
     private Vector3 _lastTraceCross;
     private Node _losingNode;
 
     public delegate GameObject OnIntersectionHappenedHandler(Vector3 intersectionPosition);
     public OnIntersectionHappenedHandler eOnIntersectionHappened;
+
+    public delegate void TracesEvents();
+    public static event TracesEvents OnBeginBurnFuse;
+    public static event TracesEvents OnAllBurningStopped;
+    
+
 
     [Header("Prefabs")]
     public GameObject intersectionPrefab;
@@ -30,11 +37,11 @@ public class TracesHandler : MonoBehaviour {
 
         GameObject trace = Instantiate(_traceToCreate, _playerController.transform.position, Quaternion.identity);
         trace.transform.parent = transform;
-              
+
         _traces.Add(trace.GetComponent<Trace>());
 
         _playerController.setTrace(trace.GetComponent<Trace>());
-        
+
         _graph = new Graph();
         _graph.addNode();
 
@@ -42,13 +49,15 @@ public class TracesHandler : MonoBehaviour {
 
         Bomb.OnPlayerInitiateBomb += beginBurn;
         DeadZone.OnPlayerEnterDeadZone += beginBurnFromPlayer;
+
+
     }
 
     void Start()
     {
         eOnIntersectionHappened = InstanceIntersectionIndicator;
     }
-    
+
     void OnDestroy()
     {
         eOnIntersectionHappened -= InstanceIntersectionIndicator;
@@ -63,7 +72,7 @@ public class TracesHandler : MonoBehaviour {
         _graph.createTransition(previousNode, newNode, _traces[_traces.Count - 1].getIdTrace());
         _losingNode = newNode;
         setCurrentTrace();
-        
+
 
         if (_traces.Count != 0)
         {
@@ -74,17 +83,16 @@ public class TracesHandler : MonoBehaviour {
 
     public void beginBurnFromPlayer()
     {
-        return;
-        throw new System.NotImplementedException();
-
         Node previousNode = _graph.getNodes()[_graph.getNodes().Count - 1];
         Node newNode = _graph.addNode();
         _graph.createTransition(previousNode, newNode, _traces[_traces.Count - 1].getIdTrace());
 
+        print(_graph.printGraph());
+
         if (_traces.Count != 0)
         {
-            _traces[_traces.Count - 1].activateDeleting();
             _traces[_traces.Count - 1].burnLast(true);
+            _traces[_traces.Count - 1].activateDeleting();
         }
     }
 
@@ -98,12 +106,12 @@ public class TracesHandler : MonoBehaviour {
         else
             followingNode = currentEdge.getNodeFirst();
 
-        if (followingNode == _losingNode) 
+        if (followingNode == _losingNode)
         {
             // LOST
             Bomb.TriggerBomb();
         }
-            
+
 
         followingNode.release();
 
@@ -114,20 +122,20 @@ public class TracesHandler : MonoBehaviour {
         {
             if (edge.getId() != idTrace)
             {
-                
+
 
                 if (edge.getNodeFirst() == followingNode)
                 {
                     activate = true;
                     burnFirst = true;
                 }
-                    
+
                 if (edge.getNodeLast() == followingNode)
                 {
                     activate = true;
                     burnLast = true;
                 }
-                    
+
                 if (activate)
                 {
                     foreach (Trace trace in _traces)
@@ -141,11 +149,25 @@ public class TracesHandler : MonoBehaviour {
                             activate = false;
                             burnFirst = false;
                             burnLast = false;
+                            OnBeginBurnFuse();
                         }
                     }
                 }
             }
         }
+
+        bool anyFuseBurning = false;
+        foreach (Trace trace in _traces)
+        {
+            if (trace.getTraceState() == Trace.TraceState.deleting)
+            {
+                anyFuseBurning = true;
+                break;
+            }
+        }
+
+        if (!anyFuseBurning)
+            OnAllBurningStopped();
     }
 
     public bool checkCollision(Vector3 newPos, float minDistanceBetweenPoints, int idTrace)
@@ -251,6 +273,7 @@ public class TracesHandler : MonoBehaviour {
         GameObject trace = Instantiate(_traceToCreate, _playerController.transform.position, Quaternion.identity);
         trace.transform.parent = transform;
         _traces.Add(trace.GetComponent<Trace>());
+        trace.GetComponent<Trace>().addPoint(_playerController.transform.position);
         _playerController.setTrace(trace.GetComponent<Trace>());
     }
 
@@ -287,5 +310,17 @@ public class TracesHandler : MonoBehaviour {
     public void addAshes(Ashes ash)
     {
         _ashes.Add(ash);
+    }
+
+    public int getNbPoints()
+    {
+        int nbPoints = 0;
+
+        foreach(Trace trace in _traces)
+        {
+            nbPoints += trace.getNbPointsMax();
+        }
+
+        return nbPoints;
     }
 }
