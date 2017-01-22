@@ -64,6 +64,7 @@ public class SceneSwitcher : MonoBehaviour
 
     private void OnPlayerDied()
     {
+        GeneralManager.LevelDown();
         StartCoroutine(Lose());
     }
     
@@ -81,6 +82,7 @@ public class SceneSwitcher : MonoBehaviour
 
     void OnPlayerWin()
     {
+        GeneralManager.LevelUp();
         StartCoroutine(Win());
     }
 

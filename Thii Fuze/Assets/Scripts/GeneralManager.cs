@@ -5,7 +5,8 @@ public class GeneralManager : MonoBehaviour
 {
 	float deltaTime = 0.0f;
 
-    static float dificulty = 18;
+    public static int dificultyLevel = 1;
+    //static float dificulty = 18;
 
 	void Awake() 
 	{
@@ -32,4 +33,21 @@ public class GeneralManager : MonoBehaviour
 		string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
 		GUI.Label(rect, text, style);
 	}
+
+    public static void LevelUp()
+    {
+        ++dificultyLevel;
+    }
+
+    public static void LevelDown()
+    {
+        if(dificultyLevel > 1)
+        {
+            --dificultyLevel;
+        }
+    }
+    public static float GetDificulty()
+    {
+        return Mathf.Log(dificultyLevel) * 10 + 18;
+    }
 }

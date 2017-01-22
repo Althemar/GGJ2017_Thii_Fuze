@@ -52,7 +52,7 @@ public class Trace : MonoBehaviour
         _points = new List<Vector3>();
         _lineRenderer = GetComponent<LineRenderer>();
         _minDistanceBetweenPoints = 1/18f;
-        _deleteRate = 0.001f;
+        _deleteRate = GeneralManager.GetDificulty();
         _traceState = TraceState.drawing;
         _distanceToMoveLast = _distanceToMoveFirst;
         _nbPointMax = 0;

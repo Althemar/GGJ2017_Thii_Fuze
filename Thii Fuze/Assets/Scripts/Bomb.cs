@@ -31,6 +31,7 @@ public class Bomb : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Player") && !bombInitiated)
         {
+            Debug.Log("OnPlayerInitiateBomb");
             //collision.gameObject.GetComponent<PlayerController>().setPlayerState(PlayerController.PlayerState.toStart);
             OnPlayerInitiateBomb();
         }
