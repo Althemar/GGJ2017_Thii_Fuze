@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
 
     public static System.Action eDied;
 
+    public bool isOnTapis = false;
+
     private void Awake()
     {
         startPos = transform.position;
@@ -59,6 +61,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!isOnTapis)
+        {
+            rb.velocity = Vector2.zero;
+        }
         Vector2 moveJ1;
         Vector2 moveJ2;
         moveJ1 = new Vector2(Input.GetAxis("HorizontalJ1"), Input.GetAxis("VerticalJ1"));
@@ -71,7 +77,10 @@ public class PlayerController : MonoBehaviour
         arrowJ2.transform.rotation = Quaternion.LookRotation(Vector3.forward, new Vector3(moveJ2.x, moveJ2.y, 0));
         Vector2 move = moveJ1 + moveJ2;
 
-        rb.velocity -= velocity;
+        if (isOnTapis)
+        {
+            rb.velocity -= velocity;
+        }
         if (dead)
         {
             rb.velocity = Vector3.zero;
