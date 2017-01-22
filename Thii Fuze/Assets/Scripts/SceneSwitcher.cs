@@ -22,31 +22,32 @@ public class SceneSwitcher : MonoBehaviour
 
 	void Awake()
 	{
-		SceneManager.LoadScene(1, LoadSceneMode.Additive);
-		scenes = SceneManager.GetAllScenes();
         _instance = this;
-
         PlayerController.eDied += OnPlayerDied;
 
+
+        SceneManager.LoadScene(2, LoadSceneMode.Additive);
+        SceneManager.LoadScene(7, LoadSceneMode.Additive);
+        scenes = SceneManager.GetAllScenes();
     }
 
 	void Start()
 	{
-		startGame = GameObject.Find("Play").GetComponent<Button>();
-		highScore = GameObject.Find("High Score").GetComponent<Button>();
-		credits = GameObject.Find("Credits").GetComponent<Button>();
-		quit = GameObject.Find("Quit").GetComponent<Button>();
+		//startGame = GameObject.Find("Play").GetComponent<Button>();
+		//highScore = GameObject.Find("High Score").GetComponent<Button>();
+		//credits = GameObject.Find("Credits").GetComponent<Button>();
+		//quit = GameObject.Find("Quit").GetComponent<Button>();
 
-		startGame.onClick.AddListener (delegate {
-			StartCoroutine(StartGame());
-		});
-		highScore.onClick.AddListener (delegate {
-			StartCoroutine(SeeHighScore());
-		});
-		credits.onClick.AddListener (delegate {
-			StartCoroutine(SeeCredits());
-		});
-		quit.onClick.AddListener (Quit);
+		//startGame.onClick.AddListener (delegate {
+		//	StartCoroutine(StartGame());
+		//});
+		//highScore.onClick.AddListener (delegate {
+		//	StartCoroutine(SeeHighScore());
+		//});
+		//credits.onClick.AddListener (delegate {
+		//	StartCoroutine(SeeCredits());
+		//});
+		//quit.onClick.AddListener (Quit);
 	}
 
     private void OnDestroy()
