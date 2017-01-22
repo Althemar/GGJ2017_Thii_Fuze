@@ -74,6 +74,7 @@ public class TracesHandler : MonoBehaviour {
 
     public void beginBurnFromPlayer()
     {
+        return;
         throw new System.NotImplementedException();
 
         Node previousNode = _graph.getNodes()[_graph.getNodes().Count - 1];

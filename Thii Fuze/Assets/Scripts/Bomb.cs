@@ -7,6 +7,8 @@ public class Bomb : MonoBehaviour {
     public static event BombEvent OnPlayerInitiateBomb;
     public static event BombEvent OnBombExplosion;
 
+    public GameObject explosion;
+
 
     bool bombInitiated = false;
     static bool bombExplosed = false;
@@ -14,6 +16,7 @@ public class Bomb : MonoBehaviour {
     private void Awake()
     {
         OnPlayerInitiateBomb += initiateBomb;
+        OnBombExplosion += explode;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -35,8 +38,20 @@ public class Bomb : MonoBehaviour {
         if (OnBombExplosion != null && !bombExplosed)
         {
             OnBombExplosion();
-            bombExplosed = true;
+            bombExplosed = true;        
         }
+    }
+
+    public void explode()
+    {
+        Destroy(gameObject);
+        GameObject go = Instantiate(explosion);
+        go.transform.position = transform.position;
+    }
+
+    public void OnDestroy()
+    {
+        OnBombExplosion -= explode;
     }
 
 }
