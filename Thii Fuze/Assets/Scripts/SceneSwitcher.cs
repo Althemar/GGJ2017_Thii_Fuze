@@ -26,10 +26,10 @@ public class SceneSwitcher : MonoBehaviour
 	{
         _instance = this;
         PlayerController.eDied += OnPlayerDied;
-
+        PlayerController.OnPlayerFirstMoveTogether += CloseTuto;
 
         SceneManager.LoadScene(2, LoadSceneMode.Additive);
-        SceneManager.LoadScene(7, LoadSceneMode.Additive);
+        SceneManager.LoadScene("Tuto", LoadSceneMode.Additive);
         scenes = SceneManager.GetAllScenes();
     }
 
@@ -57,6 +57,7 @@ public class SceneSwitcher : MonoBehaviour
     private void OnDestroy()
     {
         PlayerController.eDied -= OnPlayerDied;
+        PlayerController.OnPlayerFirstMoveTogether -= CloseTuto;
     }
 
     private void OnPlayerDied()
@@ -64,7 +65,19 @@ public class SceneSwitcher : MonoBehaviour
         StartCoroutine(Lose());
     }
 
-	IEnumerator Back()
+    private void CloseTuto()
+    {
+        //StartCoroutine(CloseTutoCoroutine());
+        AsyncOperation unloading = SceneManager.UnloadSceneAsync("Tuto");
+        scenes = SceneManager.GetAllScenes();
+    }
+
+    IEnumerator CloseTutoCoroutine()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    IEnumerator Back()
 	{
 		if(scenes[1].name == "Win Screen")
 		{
@@ -124,9 +137,9 @@ public class SceneSwitcher : MonoBehaviour
 
 	IEnumerator Lose()
 	{
-        AsyncOperation unloading = SceneManager.UnloadSceneAsync(scenes[1]);
+        AsyncOperation unloading = SceneManager.UnloadSceneAsync("Tony_v2");
         //yield return new WaitUntil(() => unloading.isDone);
-        AsyncOperation loading = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive); // Directly reload the level on loss.
+        AsyncOperation loading = SceneManager.LoadSceneAsync("Tony_v2", LoadSceneMode.Additive); // Directly reload the level on loss.
         //AsyncOperation loading = SceneManager.LoadSceneAsync(4, LoadSceneMode.Additive);
         yield return new WaitUntil(() => loading.isDone);
 		//back = GameObject.Find("Back").GetComponent<Button>();
