@@ -170,7 +170,6 @@ public class Trace : MonoBehaviour
 
         if (_traceState != TraceState.deleting)
         {
-            print("BURNING FROM PLAYER");
             _traceState = TraceState.deleting;
             _coroutine = burn(_deleteRate);
             StartCoroutine(_coroutine);

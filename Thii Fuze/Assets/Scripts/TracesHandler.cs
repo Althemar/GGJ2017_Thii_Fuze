@@ -149,7 +149,7 @@ public class TracesHandler : MonoBehaviour {
                             activate = false;
                             burnFirst = false;
                             burnLast = false;
-                            OnBeginBurnFuse();
+                            //OnBeginBurnFuse();
                         }
                     }
                 }
@@ -165,9 +165,10 @@ public class TracesHandler : MonoBehaviour {
                 break;
             }
         }
-
+        /*
         if (!anyFuseBurning)
             OnAllBurningStopped();
+            */
     }
 
     public bool checkCollision(Vector3 newPos, float minDistanceBetweenPoints, int idTrace)
