@@ -27,6 +27,7 @@ public class SceneSwitcher : MonoBehaviour
         _instance = this;
         PlayerController.eDied += OnPlayerDied;
         PlayerController.OnPlayerFirstMoveTogether += CloseTuto;
+        GameController.OnGameWon += OnPlayerWin;
 
         SceneManager.LoadScene(2, LoadSceneMode.Additive);
         SceneManager.LoadScene("Tuto", LoadSceneMode.Additive);
@@ -58,13 +59,14 @@ public class SceneSwitcher : MonoBehaviour
     {
         PlayerController.eDied -= OnPlayerDied;
         PlayerController.OnPlayerFirstMoveTogether -= CloseTuto;
+        GameController.OnGameWon -= OnPlayerWin;
     }
 
     private void OnPlayerDied()
     {
         StartCoroutine(Lose());
     }
-
+    
     private void CloseTuto()
     {
         //StartCoroutine(CloseTutoCoroutine());
@@ -75,6 +77,11 @@ public class SceneSwitcher : MonoBehaviour
     IEnumerator CloseTutoCoroutine()
     {
         throw new System.NotImplementedException();
+    }
+
+    void OnPlayerWin()
+    {
+        StartCoroutine(Win());
     }
 
     IEnumerator Back()

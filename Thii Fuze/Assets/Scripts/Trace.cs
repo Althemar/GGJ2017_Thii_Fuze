@@ -9,10 +9,13 @@ public class Trace : MonoBehaviour
     {
         drawing,
         deleting,
+        deleted,
     };
 
+    private static int BURNING_TRACES = 0;
     private static int ID_TRACE = 0;
     private int _idTrace;
+    private int _nbPointMax;
 
     public GameObject FireParticles;
     public GameObject _ashToCreate;
@@ -51,7 +54,8 @@ public class Trace : MonoBehaviour
         _minDistanceBetweenPoints = 1/18f;
         _deleteRate = 0.001f;
         _traceState = TraceState.drawing;
-       
+        _distanceToMoveLast = _distanceToMoveFirst;
+        _nbPointMax = 0;
     }
 
     private void Update()
@@ -77,7 +81,6 @@ public class Trace : MonoBehaviour
         _lineRenderer.numPositions = _points.Count;
         for (int i = 0; i < _points.Count; i++)
             _lineRenderer.SetPosition(i, _points[i]);
-        
     }
 
     /*
@@ -103,18 +106,34 @@ public class Trace : MonoBehaviour
         _points = newList;
     }
 
+    public static int getBurningTraces()
+    {
+        return BURNING_TRACES;
+    }
+
+    public int getNbPointsMax()
+    {
+        return _nbPointMax;
+    }
+
     /*
      * Methods
      */
 
     public void addPoint(Vector3 newPos)
     {
+        if (_traceState != TraceState.drawing)
+            return;
+
         bool collision = transform.parent.gameObject.GetComponent<TracesHandler>().checkCollision(newPos, _minDistanceBetweenPoints, _idTrace);
 
         if (!collision)
         {
             if (_points.Count == 0)
+            {
                 _points.Add(newPos);
+                _nbPointMax++;
+            }
             else
             {
                 Vector3 currentPos = newPos;
@@ -125,8 +144,8 @@ public class Trace : MonoBehaviour
                 {
                     lastsPos = Vector3.MoveTowards(lastsPos, currentPos, _minDistanceBetweenPoints);
                     _points.Add(lastsPos);
+                    _nbPointMax++;
                     distanceFromLast = Vector3.Distance(currentPos, lastsPos);
-                    
                 }
             }
         }
@@ -134,7 +153,7 @@ public class Trace : MonoBehaviour
 
     public void activateDeleting()
     {
-
+        BURNING_TRACES++;
 
         GameObject ashFirst = Instantiate(_ashToCreate);
         GameObject ashLast = Instantiate(_ashToCreate);
@@ -175,6 +194,8 @@ public class Trace : MonoBehaviour
         {
             yield return new WaitForSeconds(waitTime);
 
+            
+
             if (_points.Count > 0 && _deleteFirst)
             {
                 _ashesFirst.addPoint(_points[0]);
@@ -187,6 +208,7 @@ public class Trace : MonoBehaviour
             }
             if (_points.Count == 0)
             {
+                _traceState = TraceState.deleted;
                 if (_deleteFirst && !_deleteLast)
                     transform.parent.gameObject.GetComponent<TracesHandler>().burnFollowing(_idTrace, true);
                 else if (_deleteLast && !_deleteFirst)
@@ -195,6 +217,7 @@ public class Trace : MonoBehaviour
                     Destroy(_fireParticle);
                 if (_fireParticleLast != null)
                     Destroy(_fireParticleLast);
+                BURNING_TRACES--;
                 StopCoroutine(_coroutine);
             }
         }      
@@ -231,4 +254,7 @@ public class Trace : MonoBehaviour
         }
         _fireParticleLast.transform.position = _points[pointIndex];
     }
+
+    
+    
 }

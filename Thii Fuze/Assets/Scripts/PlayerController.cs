@@ -114,6 +114,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if (_playerState == PlayerState.toBomb)
+            
             _trace.addPoint(transform.position);
     }
 
