@@ -191,6 +191,10 @@ public class Trace : MonoBehaviour
                     transform.parent.gameObject.GetComponent<TracesHandler>().burnFollowing(_idTrace, true);
                 else if (_deleteLast && !_deleteFirst)
                     transform.parent.gameObject.GetComponent<TracesHandler>().burnFollowing(_idTrace, false);
+                if (_fireParticle != null)
+                    Destroy(_fireParticle);
+                if (_fireParticleLast != null)
+                    Destroy(_fireParticleLast);
                 StopCoroutine(_coroutine);
             }
         }      
