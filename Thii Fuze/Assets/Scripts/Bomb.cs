@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Collider2D))]
 public class Bomb : MonoBehaviour {
@@ -17,7 +18,14 @@ public class Bomb : MonoBehaviour {
     {
         OnPlayerInitiateBomb += initiateBomb;
         OnBombExplosion += explode;
+        bombExplosed = false;
     }
+
+    public void OnDestroy()
+    {
+        OnBombExplosion -= explode;
+    }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -45,13 +53,9 @@ public class Bomb : MonoBehaviour {
     public void explode()
     {
         Destroy(gameObject);
+        SceneManager.SetActiveScene(gameObject.scene);
         GameObject go = Instantiate(explosion);
         go.transform.position = transform.position;
-    }
 
-    public void OnDestroy()
-    {
-        OnBombExplosion -= explode;
     }
-
 }

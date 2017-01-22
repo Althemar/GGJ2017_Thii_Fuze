@@ -24,39 +24,41 @@ public class SceneSwitcher : MonoBehaviour
 
 	void Awake()
 	{
-		SceneManager.LoadScene(1, LoadSceneMode.Additive);
-		scenes = SceneManager.GetAllScenes();
         _instance = this;
-
         PlayerController.eDied += OnPlayerDied;
+        PlayerController.OnPlayerFirstMoveTogether += CloseTuto;
         GameController.OnGameWon += OnPlayerWin;
 
+        SceneManager.LoadScene(2, LoadSceneMode.Additive);
+        SceneManager.LoadScene("Tuto", LoadSceneMode.Additive);
+        scenes = SceneManager.GetAllScenes();
     }
 
 	void Start()
 	{
-		startGame = GameObject.Find("Play").GetComponent<Button>();
-		highScore = GameObject.Find("High Score").GetComponent<Button>();
-		credits = GameObject.Find("Credits").GetComponent<Button>();
-		quit = GameObject.Find("Quit").GetComponent<Button>();
+		//startGame = GameObject.Find("Play").GetComponent<Button>();
+		//highScore = GameObject.Find("High Score").GetComponent<Button>();
+		//credits = GameObject.Find("Credits").GetComponent<Button>();
+		//quit = GameObject.Find("Quit").GetComponent<Button>();
+        
+		//startGame.onClick.AddListener (delegate {
+		//	StartCoroutine(StartGame());
+		//});
+		//highScore.onClick.AddListener (delegate {
+		//	StartCoroutine(SeeHighScore());
+		//});
+		//credits.onClick.AddListener (delegate {
+		//	StartCoroutine(SeeCredits());
+		//});
+		//quit.onClick.AddListener (Quit);
 
-		startGame.onClick.AddListener (delegate {
-			StartCoroutine(StartGame());
-		});
-		highScore.onClick.AddListener (delegate {
-			StartCoroutine(SeeHighScore());
-		});
-		credits.onClick.AddListener (delegate {
-			StartCoroutine(SeeCredits());
-		});
-		quit.onClick.AddListener (Quit);
-
-		sound.PlayMenu();
-	}
+        sound.PlayMenu();
+    }
 
     private void OnDestroy()
     {
         PlayerController.eDied -= OnPlayerDied;
+        PlayerController.OnPlayerFirstMoveTogether -= CloseTuto;
         GameController.OnGameWon -= OnPlayerWin;
     }
 
@@ -64,13 +66,25 @@ public class SceneSwitcher : MonoBehaviour
     {
         StartCoroutine(Lose());
     }
+    
+    private void CloseTuto()
+    {
+        //StartCoroutine(CloseTutoCoroutine());
+        AsyncOperation unloading = SceneManager.UnloadSceneAsync("Tuto");
+        scenes = SceneManager.GetAllScenes();
+    }
+
+    IEnumerator CloseTutoCoroutine()
+    {
+        throw new System.NotImplementedException();
+    }
 
     void OnPlayerWin()
     {
         StartCoroutine(Win());
     }
 
-	IEnumerator Back()
+    IEnumerator Back()
 	{
 		if(scenes[1].name == "Win Screen")
 		{
@@ -130,9 +144,9 @@ public class SceneSwitcher : MonoBehaviour
 
 	IEnumerator Lose()
 	{
-        AsyncOperation unloading = SceneManager.UnloadSceneAsync(scenes[1]);
+        AsyncOperation unloading = SceneManager.UnloadSceneAsync("Tony_v2");
         //yield return new WaitUntil(() => unloading.isDone);
-        AsyncOperation loading = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive); // Directly reload the level on loss.
+        AsyncOperation loading = SceneManager.LoadSceneAsync("Tony_v2", LoadSceneMode.Additive); // Directly reload the level on loss.
         //AsyncOperation loading = SceneManager.LoadSceneAsync(4, LoadSceneMode.Additive);
         yield return new WaitUntil(() => loading.isDone);
 		//back = GameObject.Find("Back").GetComponent<Button>();
