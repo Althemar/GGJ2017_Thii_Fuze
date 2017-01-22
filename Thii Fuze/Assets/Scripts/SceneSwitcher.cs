@@ -18,6 +18,10 @@ public class SceneSwitcher : MonoBehaviour
 
 	Scene[] scenes;
 
+	public FMODUnity.StudioEventEmitter fmodEmiter_menu;
+	public FMODUnity.StudioEventEmitter fmodEmiter_win;
+	public FMODUnity.StudioEventEmitter fmodEmiter_lose;
+
 	void Awake()
 	{
 		SceneManager.LoadScene(1, LoadSceneMode.Additive);
@@ -41,10 +45,17 @@ public class SceneSwitcher : MonoBehaviour
 			StartCoroutine(SeeCredits());
 		});
 		quit.onClick.AddListener (Quit);
+
+		fmodEmiter_menu.Play();
 	}
 
 	IEnumerator Back()
 	{
+		if(scenes[1].name == "Win Screen")
+		{
+			fmodEmiter_win.Play();
+			fmodEmiter_menu.Play();
+		}
 		SceneManager.UnloadSceneAsync(scenes[1]);
 		AsyncOperation loading = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
 		yield return new WaitUntil(() => loading.isDone);
@@ -64,6 +75,8 @@ public class SceneSwitcher : MonoBehaviour
 		});
 		quit.onClick.AddListener (Quit);
 		scenes = SceneManager.GetAllScenes();
+
+
 	}
 
 	IEnumerator StartGame()
@@ -80,6 +93,9 @@ public class SceneSwitcher : MonoBehaviour
 //			StartCoroutine(Lose());
 //		});
 		scenes = SceneManager.GetAllScenes();
+
+		fmodEmiter_menu.Stop();
+
 	}
 
 	IEnumerator Win()
@@ -92,9 +108,12 @@ public class SceneSwitcher : MonoBehaviour
 			StartCoroutine(Back());
 		});
 		scenes = SceneManager.GetAllScenes();
+
+		fmodEmiter_win.Play();
+
 	}
 
-	IEnumerator Lose()
+	IEnumerator SeeHighScore()
 	{
 		SceneManager.UnloadSceneAsync(scenes[1]);
 		AsyncOperation loading = SceneManager.LoadSceneAsync(4, LoadSceneMode.Additive);
@@ -106,22 +125,10 @@ public class SceneSwitcher : MonoBehaviour
 		scenes = SceneManager.GetAllScenes();
 	}
 
-	IEnumerator SeeHighScore()
-	{
-		SceneManager.UnloadSceneAsync(scenes[1]);
-		AsyncOperation loading = SceneManager.LoadSceneAsync(5, LoadSceneMode.Additive);
-		yield return new WaitUntil(() => loading.isDone);
-		back = GameObject.Find("Back").GetComponent<Button>();
-		back.onClick.AddListener (delegate {
-			StartCoroutine(Back());
-		});
-		scenes = SceneManager.GetAllScenes();
-	}
-
 	IEnumerator SeeCredits()
 	{
 		SceneManager.UnloadSceneAsync(scenes[1]);
-		AsyncOperation loading = SceneManager.LoadSceneAsync(6, LoadSceneMode.Additive);
+		AsyncOperation loading = SceneManager.LoadSceneAsync(5, LoadSceneMode.Additive);
 		yield return new WaitUntil(() => loading.isDone);
 		back = GameObject.Find("Back").GetComponent<Button>();
 		back.onClick.AddListener (delegate {
