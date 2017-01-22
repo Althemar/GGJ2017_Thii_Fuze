@@ -17,6 +17,12 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem deathByElecticity;
     bool dead = false;
 
+    public static bool ShowTutorialAtFirstMove = false;
+    bool firstMoveMade = false;
+
+    public delegate void MoveEvent();
+    public static event MoveEvent OnPlayerFirstMoveTogether;
+
     public enum PlayerState
     {
         toBomb,
@@ -69,6 +75,16 @@ public class PlayerController : MonoBehaviour
         Vector2 moveJ2;
         moveJ1 = new Vector2(Input.GetAxis("HorizontalJ1"), Input.GetAxis("VerticalJ1"));
         moveJ2 = new Vector2(Input.GetAxis("HorizontalJ2"), Input.GetAxis("VerticalJ2"));
+        if (ShowTutorialAtFirstMove)
+        {
+            if (moveJ1 != Vector2.zero && moveJ2 != Vector2.zero)
+            {
+                if (OnPlayerFirstMoveTogether != null)
+                {
+                    OnPlayerFirstMoveTogether();
+                }
+            }
+        }
         discordAngle = Vector2.Angle(moveJ1, moveJ2);
 
         arrowJ1.transform.localPosition = (Vector3)moveJ1 * arrowDistance + Vector3.forward * 0.1f;
