@@ -38,6 +38,7 @@ public class TracesHandler : MonoBehaviour {
         _lastTraceCross = _playerController.GetComponent<Transform>().position;
 
         Bomb.OnPlayerInitiateBomb += beginBurn;
+        DeadZone.OnPlayerEnterDeadZone += beginBurnFromPlayer;
     }
 
     void Start()
@@ -49,6 +50,7 @@ public class TracesHandler : MonoBehaviour {
     {
         eOnIntersectionHappened -= InstanceIntersectionIndicator;
         Bomb.OnPlayerInitiateBomb -= beginBurn;
+        DeadZone.OnPlayerEnterDeadZone -= beginBurnFromPlayer;
     }
 
     public void beginBurn()
@@ -66,6 +68,21 @@ public class TracesHandler : MonoBehaviour {
         }
     }
 
+    public void beginBurnFromPlayer()
+    {
+        throw new System.NotImplementedException();
+
+        Node previousNode = _graph.getNodes()[_graph.getNodes().Count - 1];
+        Node newNode = _graph.addNode();
+        _graph.createTransition(previousNode, newNode, _traces[_traces.Count - 1].getIdTrace());
+
+        if (_traces.Count != 0)
+        {
+            _traces[_traces.Count - 1].activateDeleting();
+            _traces[_traces.Count - 1].burnLast(true);
+        }
+    }
+
     public void burnFollowing(int idTrace, bool deleteFirst)
     {
         Edge currentEdge = _graph.getEdgeWithId(idTrace);
@@ -79,6 +96,7 @@ public class TracesHandler : MonoBehaviour {
         if (followingNode == _losingNode)
         {
             // LOST
+            Bomb.TriggerBomb();
         }
             
 
@@ -162,7 +180,7 @@ public class TracesHandler : MonoBehaviour {
                         _graph.createTransition(oldNode, newNode, traceCrossed.getIdTrace());
                         _graph.createTransition(newNode, newNode, newTrace.getIdTrace());
 
-                        //drawCrossSign(newNode, newPos);
+                        drawCrossSign(newNode, newPos);
 
                         setCurrentTrace();
                     }
@@ -191,7 +209,7 @@ public class TracesHandler : MonoBehaviour {
                         _graph.createTransition(node1, newNode, traceCrossed.getIdTrace());
                         _graph.createTransition(newNode, node2, newTrace.getIdTrace());
 
-                        //drawCrossSign(newNode, newPos);
+                        drawCrossSign(newNode, newPos);
 
                         setCurrentTrace();
                     }
@@ -241,6 +259,7 @@ public class TracesHandler : MonoBehaviour {
     {
         GameObject intersectionGo = Instantiate(intersectionPrefab);
         intersectionGo.name = "Intersection";
+        intersectionGo.transform.SetParent(transform);
         intersectionGo.transform.position = position;
 
         return intersectionGo;

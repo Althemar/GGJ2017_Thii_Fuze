@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class SceneSwitcher : MonoBehaviour 
 {
-	Button back;
+    private SceneSwitcher _instance;
+
+    Button back;
 
 	Button startGame;
 	Button highScore;
@@ -22,7 +24,11 @@ public class SceneSwitcher : MonoBehaviour
 	{
 		SceneManager.LoadScene(1, LoadSceneMode.Additive);
 		scenes = SceneManager.GetAllScenes();
-	}
+        _instance = this;
+
+        PlayerController.eDied += OnPlayerDied;
+
+    }
 
 	void Start()
 	{
@@ -42,6 +48,16 @@ public class SceneSwitcher : MonoBehaviour
 		});
 		quit.onClick.AddListener (Quit);
 	}
+
+    private void OnDestroy()
+    {
+        PlayerController.eDied -= OnPlayerDied;
+    }
+
+    private void OnPlayerDied()
+    {
+        StartCoroutine(Lose());
+    }
 
 	IEnumerator Back()
 	{
@@ -68,8 +84,8 @@ public class SceneSwitcher : MonoBehaviour
 
 	IEnumerator StartGame()
 	{
-		SceneManager.UnloadSceneAsync(scenes[1]);
-		AsyncOperation loading = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
+        AsyncOperation unloading = SceneManager.UnloadSceneAsync(scenes[1]);
+        AsyncOperation loading = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
 		yield return new WaitUntil(() => loading.isDone);
 //		win = GameObject.Find("Win").GetComponent<Button>();
 //		lose = GameObject.Find("Lose").GetComponent<Button>();
@@ -96,13 +112,15 @@ public class SceneSwitcher : MonoBehaviour
 
 	IEnumerator Lose()
 	{
-		SceneManager.UnloadSceneAsync(scenes[1]);
-		AsyncOperation loading = SceneManager.LoadSceneAsync(4, LoadSceneMode.Additive);
-		yield return new WaitUntil(() => loading.isDone);
-		back = GameObject.Find("Back").GetComponent<Button>();
-		back.onClick.AddListener (delegate {
-			StartCoroutine(Back());
-		});
+        AsyncOperation unloading = SceneManager.UnloadSceneAsync(scenes[1]);
+        //yield return new WaitUntil(() => unloading.isDone);
+        AsyncOperation loading = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive); // Directly reload the level on loss.
+        //AsyncOperation loading = SceneManager.LoadSceneAsync(4, LoadSceneMode.Additive);
+        yield return new WaitUntil(() => loading.isDone);
+		//back = GameObject.Find("Back").GetComponent<Button>();
+		//back.onClick.AddListener (delegate {
+		//	StartCoroutine(Back());
+		//});
 		scenes = SceneManager.GetAllScenes();
 	}
 

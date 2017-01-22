@@ -17,6 +17,13 @@ public class GameController : MonoBehaviour {
         DeadZone.OnPlayerEnterDeadZone += gameLost;
     }
 
+    private void OnDestroy()
+    {
+        WinZone.OnPlayerEnterWinZone -= gameWon;
+        Bomb.OnBombExplosion -= gameLost;
+        DeadZone.OnPlayerEnterDeadZone -= gameLost;
+    }
+
     void gameWon()
     {
         OnGameWon();

@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour
     private Trace _trace;
     private PlayerState _playerState;
 
+    public static System.Action eDied;
+
     private void Awake()
     {
         startPos = transform.position;
@@ -110,11 +112,16 @@ public class PlayerController : MonoBehaviour
         rb.simulated = false;
         //rb.velocity = Vector3.zero;
         yield return new WaitForSeconds(2);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        rb.simulated = true;
-        rendering.SetActive(true);
-        transform.position = startPos;
-        dead = false;
+        if (eDied != null)
+        {
+            eDied();
+        }
+
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        //rb.simulated = true;
+        //rendering.SetActive(true);
+        //transform.position = startPos;
+        //dead = false;
         //rb.velocity = Vector3.zero;
     }
     

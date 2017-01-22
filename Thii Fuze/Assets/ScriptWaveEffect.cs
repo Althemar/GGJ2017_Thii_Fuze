@@ -23,19 +23,25 @@ public class ScriptWaveEffect : MonoBehaviour {
         if (!Application.isPlaying)
             return;
 
-        DeadZone.OnPlayerEnterDeadZone += Die;
+        DeadZone.OnPlayerEnterDeadZone += ElectricBoom;
+        Bomb.OnBombExplosion += BombBoom;
 
         //StartCoroutine(Shaker());
     }
 
     private void OnDestroy()
     {
-        DeadZone.OnPlayerEnterDeadZone -= Die;
+        DeadZone.OnPlayerEnterDeadZone -= ElectricBoom;
+        Bomb.OnBombExplosion -= BombBoom;
     }
 
-    public void Die()
+    public void ElectricBoom()
     {
-        StartCoroutine(Shake(2f, 0.33f));
+        StartCoroutine(Shake(0.75f, 0.33f));
+    }
+    public void BombBoom()
+    {
+        StartCoroutine(Shake(1.25f, 0.66f));
     }
 
     IEnumerator Shaker()
@@ -58,7 +64,7 @@ public class ScriptWaveEffect : MonoBehaviour {
         {
             yield return new WaitForEndOfFrame();
             float param = (Time.realtimeSinceStartup - startTime) / duration;
-            float slider = Mathf.Sin((Mathf.Pow(param, 0.6f)) * Mathf.PI * 3);
+            float slider = Mathf.Sin(param * Mathf.PI * 2);
             fx.SetFloat("_EffectStrengh", slider >= 0 ? Mathf.Lerp(0f, 0.5f * strengh, slider) : Mathf.Lerp(0f, -0.075f * strengh, - slider) * (1 -param) * (1 - param));
             //fx.SetVector("_PosDevSpace", GetTargetUv());
         }

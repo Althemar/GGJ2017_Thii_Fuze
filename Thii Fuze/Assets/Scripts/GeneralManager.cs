@@ -5,6 +5,8 @@ public class GeneralManager : MonoBehaviour
 {
 	float deltaTime = 0.0f;
 
+    static float dificulty = 18;
+
 	void Awake() 
 	{
 		Application.targetFrameRate = 60;

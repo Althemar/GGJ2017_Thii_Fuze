@@ -28,4 +28,13 @@ public class Bomb : MonoBehaviour {
     {
         bombInitiated = true;
     }
+
+    public static void TriggerBomb()
+    {
+        if (OnBombExplosion != null)
+        {
+            OnBombExplosion();
+        }
+    }
+
 }
