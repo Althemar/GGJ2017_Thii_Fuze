@@ -134,13 +134,13 @@ public class SceneSwitcher : MonoBehaviour
 	IEnumerator Win()
 	{
 		sound.PlayVictory();
-		SceneManager.UnloadSceneAsync(scenes[1]);
-		AsyncOperation loading = SceneManager.LoadSceneAsync(3, LoadSceneMode.Additive);
-		yield return new WaitUntil(() => loading.isDone);
-		back = GameObject.Find("Back").GetComponent<Button>();
-		back.onClick.AddListener (delegate {
-			StartCoroutine(Back());
-		});
+		SceneManager.UnloadSceneAsync("Tony_v2");
+		AsyncOperation loading = SceneManager.LoadSceneAsync("Tony_v2", LoadSceneMode.Additive);
+        yield return new WaitUntil(() => loading.isDone);
+		//back = GameObject.Find("Back").GetComponent<Button>();
+		//back.onClick.AddListener (delegate {
+		//	StartCoroutine(Back());
+		//});
 		scenes = SceneManager.GetAllScenes();
 	}
 

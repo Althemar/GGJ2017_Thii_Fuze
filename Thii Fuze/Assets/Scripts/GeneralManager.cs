@@ -48,6 +48,6 @@ public class GeneralManager : MonoBehaviour
     }
     public static float GetDificulty()
     {
-        return Mathf.Log(dificultyLevel) * 10 + 18;
+        return (0.1f / dificultyLevel);
     }
 }

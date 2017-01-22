@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem deathByElecticity;
     bool dead = false;
 
-    public static bool ShowTutorialAtFirstMove = false;
+    public static bool ShowTutorialAtFirstMove = true;
     bool firstMoveMade = false;
 
     public delegate void MoveEvent();

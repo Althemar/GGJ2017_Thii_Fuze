@@ -83,17 +83,18 @@ public class TracesHandler : MonoBehaviour {
 
     public void beginBurnFromPlayer()
     {
-        Node previousNode = _graph.getNodes()[_graph.getNodes().Count - 1];
-        Node newNode = _graph.addNode();
-        _graph.createTransition(previousNode, newNode, _traces[_traces.Count - 1].getIdTrace());
+        return;
+        //Node previousNode = _graph.getNodes()[_graph.getNodes().Count - 1];
+        //Node newNode = _graph.addNode();
+        //_graph.createTransition(previousNode, newNode, _traces[_traces.Count - 1].getIdTrace());
 
-        print(_graph.printGraph());
+        //print(_graph.printGraph());
 
-        if (_traces.Count != 0)
-        {
-            _traces[_traces.Count - 1].burnLast(true);
-            _traces[_traces.Count - 1].activateDeleting();
-        }
+        //if (_traces.Count != 0)
+        //{
+        //    _traces[_traces.Count - 1].burnLast(true);
+        //    _traces[_traces.Count - 1].activateDeleting();
+        //}
     }
 
     public void burnFollowing(int idTrace, bool deleteFirst)
