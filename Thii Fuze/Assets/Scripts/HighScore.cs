@@ -55,7 +55,7 @@ public class HighScore : MonoBehaviour
 	{
 		for(int i = highScores.Length - 1; i >= 0; i--)
 		{
-			if(lastScore > highScores[i])
+			if(lastScore < highScores[i])
 			{
 				if(i < 9)
 				{
