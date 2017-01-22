@@ -12,7 +12,7 @@ public class TracesHandler : MonoBehaviour {
     private List<Trace> _traces;
     private List<Ashes> _ashes;
     private Graph _graph;
-    private nbPoints;
+    private int nbPoints;
 
     private Vector3 _lastTraceCross;
     private Node _losingNode;
