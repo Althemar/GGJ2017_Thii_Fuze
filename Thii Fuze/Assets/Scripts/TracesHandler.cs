@@ -48,6 +48,7 @@ public class TracesHandler : MonoBehaviour {
     void OnDestroy()
     {
         eOnIntersectionHappened -= InstanceIntersectionIndicator;
+        Bomb.OnPlayerInitiateBomb -= beginBurn;
     }
 
     public void beginBurn()

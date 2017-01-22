@@ -26,6 +26,12 @@ public class UIManager : MonoBehaviour {
         GameController.OnGameWon += displayWinMessage;
     }
 
+    private void OnDestroy()
+    {
+        GameController.OnGameOver -= displayLostMessage;
+        GameController.OnGameWon -= displayWinMessage;
+    }
+
     void displayWinMessage()
     {
         finalText.text = string.Format(winText, 5);

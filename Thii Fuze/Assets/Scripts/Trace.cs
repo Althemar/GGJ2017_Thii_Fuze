@@ -44,8 +44,8 @@ public class Trace : MonoBehaviour
         ID_TRACE++;
         _points = new List<Vector3>();
         _lineRenderer = GetComponent<LineRenderer>();
-        _minDistanceBetweenPoints = 0.05f;
-        _deleteRate = 0.1f;
+        _minDistanceBetweenPoints = 1/18f;
+        _deleteRate = 0.001f;
         _traceState = TraceState.drawing;
     }
 

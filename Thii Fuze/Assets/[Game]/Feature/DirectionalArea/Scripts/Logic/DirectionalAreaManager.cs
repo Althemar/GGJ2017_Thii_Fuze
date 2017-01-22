@@ -10,17 +10,36 @@ public class DirectionalAreaManager : MonoBehaviour {
     private void Start()
     {
         controllerList = GetComponentsInChildren<DirectionalAreaController>();
+        StartCoroutine(InitControllers());
         StartCoroutine(WaveManager());
-        InitControllers();
+
+        DeadZone.OnPlayerEnterDeadZone += EndControllers;
+        Bomb.OnBombExplosion += EndControllers;
     }
 
-    void InitControllers()
+    private void OnDestroy()
     {
-        float direction = 1;
+        DeadZone.OnPlayerEnterDeadZone -= EndControllers;
+        Bomb.OnBombExplosion -= EndControllers;
+    }
+
+    IEnumerator InitControllers()
+    {
+        float direction = Mathf.Lerp(-1, 1, Mathf.Round(Random.value));
         foreach(var controller in controllerList)
         {
+            yield return new WaitForSeconds(0.05f);
             controller.SetTargetDirection(direction);
             direction = -direction;
+        }
+    }
+
+    void EndControllers()
+    {
+        foreach (var controller in controllerList)
+        {
+            controller.SetTargetDirection(0);
+            controller.active = false;
         }
     }
 

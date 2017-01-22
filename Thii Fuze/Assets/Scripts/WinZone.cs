@@ -14,6 +14,11 @@ public class WinZone : MonoBehaviour {
         Bomb.OnPlayerInitiateBomb += activateZone;
     }
 
+    private void OnDestroy()
+    {
+        Bomb.OnPlayerInitiateBomb -= activateZone;
+    }
+
     public void activateZone()
     {
         gameObject.GetComponent<Collider2D>().enabled = true;
