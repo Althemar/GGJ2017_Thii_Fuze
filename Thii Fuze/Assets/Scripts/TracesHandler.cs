@@ -10,6 +10,7 @@ public class TracesHandler : MonoBehaviour {
 
     private PlayerController _playerController;
     private List<Trace> _traces;
+    private List<Ashes> _ashes;
     private Graph _graph;
 
     private Vector3 _lastTraceCross;
@@ -25,11 +26,13 @@ public class TracesHandler : MonoBehaviour {
     void Awake() {
         _playerController = _player.GetComponent<PlayerController>();
         _traces = new List<Trace>();
+        _ashes = new List<Ashes>();
 
         GameObject trace = Instantiate(_traceToCreate, _playerController.transform.position, Quaternion.identity);
         trace.transform.parent = transform;
-        
+              
         _traces.Add(trace.GetComponent<Trace>());
+
         _playerController.setTrace(trace.GetComponent<Trace>());
         
         _graph = new Graph();
@@ -60,6 +63,7 @@ public class TracesHandler : MonoBehaviour {
         _graph.createTransition(previousNode, newNode, _traces[_traces.Count - 1].getIdTrace());
         _losingNode = newNode;
         setCurrentTrace();
+        
 
         if (_traces.Count != 0)
         {
@@ -70,6 +74,7 @@ public class TracesHandler : MonoBehaviour {
 
     public void beginBurnFromPlayer()
     {
+        return;
         throw new System.NotImplementedException();
 
         Node previousNode = _graph.getNodes()[_graph.getNodes().Count - 1];
@@ -93,7 +98,7 @@ public class TracesHandler : MonoBehaviour {
         else
             followingNode = currentEdge.getNodeFirst();
 
-        if (followingNode == _losingNode)
+        if (followingNode == _losingNode) 
         {
             // LOST
             Bomb.TriggerBomb();
@@ -128,7 +133,7 @@ public class TracesHandler : MonoBehaviour {
                     foreach (Trace trace in _traces)
                     {
 
-                        if (trace.getIdTrace() == edge.getId())
+                        if (trace.getIdTrace() == edge.getId() && trace.getTraceState() != Trace.TraceState.deleting)
                         {
                             trace.activateDeleting();
                             trace.burnFirst(burnFirst);
@@ -160,9 +165,6 @@ public class TracesHandler : MonoBehaviour {
                 if (Vector3.Distance(_traces[i].getPoints()[j], newPos) <= minDistanceBetweenPoints && Vector3.Distance(_lastTraceCross, newPos) >= 2* minDistanceBetweenPoints)
                 {
                     // Intersected
-                    Debug.Log("Collision");
-
-
                     Trace traceCrossed = _traces[i];
                     _lastTraceCross = newPos;
 
@@ -173,9 +175,7 @@ public class TracesHandler : MonoBehaviour {
                             return false;
 
                         Node oldNode = _graph.getNodes()[_graph.getNodes().Count - 1];
-                        Node newNode = _graph.addNode();
-
-                        
+                        Node newNode = _graph.addNode();          
 
                         _graph.createTransition(oldNode, newNode, traceCrossed.getIdTrace());
                         _graph.createTransition(newNode, newNode, newTrace.getIdTrace());
@@ -214,8 +214,6 @@ public class TracesHandler : MonoBehaviour {
                         setCurrentTrace();
                     }
 
-                    print(_graph.printGraph());
-
                     return true;
                 }
             }
@@ -230,10 +228,12 @@ public class TracesHandler : MonoBehaviour {
         trace.transform.parent = transform;
         Trace newTrace = trace.GetComponent<Trace>();
 
+        _traces.Add(trace.GetComponent<Trace>());
+
         for (int k = j; k < traceCrossed.getPoints().Count; k++)
             newTrace.getPoints().Add(new Vector3(traceCrossed.getPoints()[k].x, traceCrossed.getPoints()[k].y));
 
-        if (newTrace.GetComponent<LineRenderer>().numPositions == 0)
+        if (newTrace.getPoints().Count == 0)
         {
             Destroy(newTrace);
             Destroy(trace);
@@ -273,9 +273,7 @@ public class TracesHandler : MonoBehaviour {
         {
 
             if (neighbour.getCrossSign() != null  && Vector3.Distance(neighbour.getCrossSign().transform.position, newPos) < minCrossSignDistance)
-            {
                 drawCrossSign = false;
-            }
         }
 
         if (drawCrossSign && eOnIntersectionHappened != null)
@@ -284,5 +282,10 @@ public class TracesHandler : MonoBehaviour {
         }
 
         newNode.setCrossSign(crossSign);
+    }
+
+    public void addAshes(Ashes ash)
+    {
+        _ashes.Add(ash);
     }
 }

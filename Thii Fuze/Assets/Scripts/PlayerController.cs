@@ -17,6 +17,12 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem deathByElecticity;
     bool dead = false;
 
+    public static bool ShowTutorialAtFirstMove = false;
+    bool firstMoveMade = false;
+
+    public delegate void MoveEvent();
+    public static event MoveEvent OnPlayerFirstMoveTogether;
+
     public enum PlayerState
     {
         toBomb,
@@ -34,6 +40,8 @@ public class PlayerController : MonoBehaviour
     private PlayerState _playerState;
 
     public static System.Action eDied;
+
+    public bool isOnTapis = false;
 
     private void Awake()
     {
@@ -59,10 +67,24 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!isOnTapis)
+        {
+            rb.velocity = Vector2.zero;
+        }
         Vector2 moveJ1;
         Vector2 moveJ2;
         moveJ1 = new Vector2(Input.GetAxis("HorizontalJ1"), Input.GetAxis("VerticalJ1"));
         moveJ2 = new Vector2(Input.GetAxis("HorizontalJ2"), Input.GetAxis("VerticalJ2"));
+        if (ShowTutorialAtFirstMove)
+        {
+            if (moveJ1 != Vector2.zero && moveJ2 != Vector2.zero)
+            {
+                if (OnPlayerFirstMoveTogether != null)
+                {
+                    OnPlayerFirstMoveTogether();
+                }
+            }
+        }
         discordAngle = Vector2.Angle(moveJ1, moveJ2);
 
         arrowJ1.transform.localPosition = (Vector3)moveJ1 * arrowDistance + Vector3.forward * 0.1f;
@@ -71,7 +93,10 @@ public class PlayerController : MonoBehaviour
         arrowJ2.transform.rotation = Quaternion.LookRotation(Vector3.forward, new Vector3(moveJ2.x, moveJ2.y, 0));
         Vector2 move = moveJ1 + moveJ2;
 
-        rb.velocity -= velocity;
+        if (isOnTapis)
+        {
+            rb.velocity -= velocity;
+        }
         if (dead)
         {
             rb.velocity = Vector3.zero;
