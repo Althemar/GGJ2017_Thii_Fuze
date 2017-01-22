@@ -9,6 +9,7 @@ public class Bomb : MonoBehaviour {
 
 
     bool bombInitiated = false;
+    static bool bombExplosed = false;
 
     private void Awake()
     {
@@ -31,9 +32,10 @@ public class Bomb : MonoBehaviour {
 
     public static void TriggerBomb()
     {
-        if (OnBombExplosion != null)
+        if (OnBombExplosion != null && !bombExplosed)
         {
             OnBombExplosion();
+            bombExplosed = true;
         }
     }
 
